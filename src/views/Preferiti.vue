@@ -26,15 +26,27 @@
         <md-card-content class="content">
           <md-tabs class="tabs" md-alignment="centered">
             <md-tab id="tab-preferiti-fermate" md-label="Fermate">
-              <p>
-                Fermate Favorites tab
-                
-              </p>
+              <p class="md-subheading">Tab fermate preferite</p>
+              <md-list>
+                <md-list-item :v-for="n in 2">
+                  <md-avatar>
+                    <img
+                      src="https://images.unsplash.com/photo-1528731708534-816fe59f90cb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
+                    />
+                  </md-avatar>
+
+                  <span class="md-list-item-text">Fermata</span>
+
+                  <md-button class="md-icon-button md-list-action">
+                    <md-icon class="md-accent">favorite</md-icon>
+                  </md-button>
+                  <md-divider></md-divider>
+                </md-list-item>
+              </md-list>
             </md-tab>
+
             <md-tab id="tab-preferiti-linee" md-label="Linee">
-              <p>
-                Linee Favorites tab
-              </p>
+              <p class="md-subheading">Tab linee preferite</p>
             </md-tab>
           </md-tabs>
         </md-card-content>
@@ -44,7 +56,13 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data: () => {
+    return {
+      
+    };
+  }
+};
 </script>
 
 <style scoped>
