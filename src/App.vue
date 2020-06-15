@@ -20,10 +20,10 @@
 
         <div class="md-toolbar-row">
           <md-tabs class="md-primary tabs" md-alignment="fixed">
-            <md-tab id="tab-home" md-label="Home"></md-tab>
-            <md-tab id="tab-pages" md-label="Pages"></md-tab>
-            <md-tab id="tab-posts" md-label="Posts"></md-tab>
-            <md-tab id="tab-favorites" md-label="Favorites"></md-tab>
+            <md-tab id="tab-pianifica" md-label="Pianifica"></md-tab>
+            <md-tab id="tab-fermate" md-label="Fermate"></md-tab>
+            <md-tab id="tab-linee" md-label="Linee"></md-tab>
+            <md-tab id="tab-preferiti" md-label="Preferiti"></md-tab>
           </md-tabs>
         </div>
       </md-app-toolbar>
