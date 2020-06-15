@@ -55,7 +55,7 @@
       </md-app-drawer>
 
       <md-app-content>
-        <router-view></router-view>
+        <router-view class="container"></router-view>
       </md-app-content>
     </md-app>
   </div>
@@ -70,6 +70,10 @@
 
 .tabs {
   width: 100%;
+}
+
+.container {
+  margin-top: 20px;
 }
 
 </style>
