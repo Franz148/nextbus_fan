@@ -3,7 +3,9 @@ import VueRouter from "vue-router";
 
 Vue.use(VueRouter);
 
-const routes = [];
+const routes = [
+    { path: "/", redirect: "/pianifica" }
+];
 
 const router = new VueRouter({
     mode: "history",
