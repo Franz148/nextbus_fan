@@ -20,10 +20,10 @@
 
         <div class="md-toolbar-row">
           <md-tabs class="md-primary tabs" md-alignment="fixed">
-            <md-tab id="tab-pianifica" md-label="Pianifica"></md-tab>
+            <md-tab id="tab-pianifica" md-label="Pianifica" to="/"></md-tab>
             <md-tab id="tab-fermate" md-label="Fermate"></md-tab>
             <md-tab id="tab-linee" md-label="Linee"></md-tab>
-            <md-tab id="tab-preferiti" md-label="Preferiti"></md-tab>
+            <md-tab id="tab-preferiti" md-label="Preferiti" to="/preferiti"></md-tab>
           </md-tabs>
         </div>
       </md-app-toolbar>
@@ -78,7 +78,8 @@
 export default {
   name: "LastRowFixed",
   data: () => ({
-    menuVisible: false
+    menuVisible: false,
+    currentRoute: window.location.pathname
   })
 };
 </script>
