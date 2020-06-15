@@ -2,7 +2,7 @@
   <div>
     <div class="md-layout md-alignment-center-center">
       <md-card class="md-layout-item md-xsmall-size-90 md-small-size-80 md-size-60" md-with-hover>
-        <md-card-header class="md-layout">
+        <md-card-actions class="md-layout md-primary">
           <div class="md-layout-item md-size-90"></div>
           <md-menu md-size="small" md-align-trigger>
             <md-button class="md-icon-button" md-menu-trigger>
@@ -15,7 +15,7 @@
               <md-menu-item>Filtro 3</md-menu-item>
             </md-menu-content>
           </md-menu>
-        </md-card-header>
+        </md-card-actions>
         <md-card-content>
           <md-tabs class="tabs" md-alignment="centered">
             <md-tab id="tab-preferiti-fermate" md-label="Fermate">
