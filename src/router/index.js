@@ -1,10 +1,12 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import Preferiti from "../views/Preferiti.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
-    { path: "/", redirect: "/pianifica" }
+    { path: "/", redirect: "/pianifica" },
+    { path: "/preferiti", component: Preferiti }
 ];
 
 const router = new VueRouter({
