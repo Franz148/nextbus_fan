@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="md-layout md-gutter md-alignment-center">
-      <md-card class="md-layout-item md-small-size-50 md-medium-size-80 md-xsmall-size-100">
+    <div class="md-layout md-alignment-center">
+      <md-card class="md-layout-item md-xsmall-size-90 md-small-size-80 md-size-60 ">
         <md-card-header>
           <div class="md-title">Card without hover effect</div>
         </md-card-header>
