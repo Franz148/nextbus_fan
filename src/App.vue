@@ -14,16 +14,16 @@
 
         <div class="md-toolbar-row">
           <md-tabs class="md-primary" md-alignment="centered">
-            <md-tab id="tab-pianifica" md-label="Pianifica"></md-tab>
-            <md-tab id="tab-fermate" md-label="Fermate"></md-tab>
-            <md-tab id="tab-linee" md-label="Linee"></md-tab>
-            <md-tab id="tab-preferiti" md-label="Preferiti"></md-tab>
+            <md-tab id="tab-pianifica" md-label="Pianifica" to="/pianifica"></md-tab>
+            <md-tab id="tab-fermate" md-label="Fermate" to="/fermate"></md-tab>
+            <md-tab id="tab-linee" md-label="Linee" to="/linee"></md-tab>
+            <md-tab id="tab-preferiti" md-label="Preferiti" to="/preferiti"></md-tab>
           </md-tabs>
         </div>
       </md-app-toolbar>
 
       <md-app-content>
-        <router-view></router-view>        
+        <router-view class="margin"></router-view>        
       </md-app-content>
     </md-app>
   </div>
@@ -38,6 +38,10 @@
 
 .md-tabs {
   width: 100%;
+}
+
+.margin {
+  margin-top: 20px;
 }
 
 </style>
