@@ -54,7 +54,7 @@
         </md-list>
       </md-app-drawer>
 
-      <md-app-content>
+      <md-app-content class="bodyApp md-accent">
         <router-view class="container"></router-view>
       </md-app-content>
     </md-app>
