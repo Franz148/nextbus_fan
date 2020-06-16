@@ -26,30 +26,43 @@
         <md-card-content class="content">
           <md-tabs class="tabs" md-alignment="centered">
             <md-tab id="tab-preferiti-fermate" md-label="Fermate">
-              <p class="md-subheading">Tab fermate preferite</p>
               <md-list>
-              <div>
+                <div :v-for="n in 3"> <!-- Inserire il :v-for qui per far in modo che sia incluso anche il <divider> -->
+                  <md-list-item>
+                    <md-avatar>
+                      <img
+                        src="https://images.unsplash.com/photo-1528731708534-816fe59f90cb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
+                      />
+                    </md-avatar>
+                    <span class="md-list-item-text">Fermata {{n}}</span>
 
-                <md-list-item>
-                  <md-avatar>
-                    <img
-                      src="https://images.unsplash.com/photo-1528731708534-816fe59f90cb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
-                    />
-                  </md-avatar>
-
-                  <span class="md-list-item-text">Fermata {{n}}</span>
-
-                  <md-button class="md-icon-button md-list-action">
-                    <md-icon class="md-accent">favorite</md-icon>
-                  </md-button>
-                </md-list-item>
+                    <md-button class="md-icon-button md-list-action">
+                      <md-icon class="md-accent">favorite</md-icon>
+                    </md-button>
+                  </md-list-item>
                   <md-divider></md-divider>
-              </div>
+                </div>
               </md-list>
             </md-tab>
 
             <md-tab id="tab-preferiti-linee" md-label="Linee">
-              <p class="md-subheading">Tab linee preferite</p>
+              <md-list>
+                <div> <!-- Inserire il :v-for qui per far in modo che sia incluso anche il <divider> -->
+                  <md-list-item>
+                    <md-avatar>
+                      <img
+                        src="https://images.unsplash.com/photo-1528731708534-816fe59f90cb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
+                      />
+                    </md-avatar>
+                    <span class="md-list-item-text">Linea {{n}}</span>
+
+                    <md-button class="md-icon-button md-list-action">
+                      <md-icon class="md-accent">favorite</md-icon>
+                    </md-button>
+                  </md-list-item>
+                  <md-divider></md-divider>
+                </div>
+              </md-list>
             </md-tab>
           </md-tabs>
         </md-card-content>
@@ -59,8 +72,7 @@
 </template>
 
 <script>
-export default {
-};
+export default {};
 </script>
 
 <style scoped>
