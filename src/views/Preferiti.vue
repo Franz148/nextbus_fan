@@ -27,7 +27,7 @@
           <md-tabs class="tabs" md-alignment="centered">
             <md-tab id="tab-preferiti-fermate" md-label="Fermate">
               <md-list>
-                <div :v-for="n in 3"> <!-- Inserire il :v-for qui per far in modo che sia incluso anche il <divider> -->
+                <div> <!-- Inserire il :v-for qui per far in modo che sia incluso anche il <divider> -->
                   <md-list-item>
                     <md-avatar>
                       <img
