@@ -5,6 +5,8 @@ import VueMaterial from "vue-material";
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 
+import "./style/custom-theme.scss";
+
 Vue.config.productionTip = false;
 
 Vue.use(VueMaterial);

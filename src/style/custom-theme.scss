@@ -1,5 +1,5 @@
 @import "~vue-material/dist/theme/engine"; // Import the theme engine
-@include md-register-theme("default", ( primary: #3fffbe, // The primary color of your brand
-accent: #1a11e8 // The secondary color of your brand
+@include md-register-theme("default", ( primary: #388e3c, // The primary color of your brand
+accent: #9ccc65 // The secondary color of your brand
 ));
 @import "~vue-material/dist/theme/all"; // Apply the theme
