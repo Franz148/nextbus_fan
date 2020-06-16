@@ -55,14 +55,15 @@
       </md-app-drawer>
 
       <md-app-content class="bodyApp md-accent">
-        <router-view class="container"></router-view>
+        <transition name="view" appear enter-active-class="animated zoomInRight" leave-active-class="animated zoomOutLeft">
+          <router-view class="container"></router-view>
+        </transition>
       </md-app-content>
     </md-app>
   </div>
 </template>
 
 <style>
-
 .md-app {
   width: 100%;
   height: 100vh;
@@ -75,7 +76,6 @@
 .container {
   margin-top: 20px;
 }
-
 </style>
 
 <script>
