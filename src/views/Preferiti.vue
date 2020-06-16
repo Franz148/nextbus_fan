@@ -28,20 +28,23 @@
             <md-tab id="tab-preferiti-fermate" md-label="Fermate">
               <p class="md-subheading">Tab fermate preferite</p>
               <md-list>
-                <md-list-item :v-for="n in 2">
+              <div>
+
+                <md-list-item>
                   <md-avatar>
                     <img
                       src="https://images.unsplash.com/photo-1528731708534-816fe59f90cb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
                     />
                   </md-avatar>
 
-                  <span class="md-list-item-text">Fermata</span>
+                  <span class="md-list-item-text">Fermata {{n}}</span>
 
                   <md-button class="md-icon-button md-list-action">
                     <md-icon class="md-accent">favorite</md-icon>
                   </md-button>
-                  <md-divider></md-divider>
                 </md-list-item>
+                  <md-divider></md-divider>
+              </div>
               </md-list>
             </md-tab>
 
@@ -57,11 +60,6 @@
 
 <script>
 export default {
-  data: () => {
-    return {
-      
-    };
-  }
 };
 </script>
 
