@@ -31,6 +31,10 @@
 
 <style>
 
+.md-app-toolbar {
+  z-index: 900 !important;
+}
+
 .md-app {
   width: 100%;
   height: 100vh;
