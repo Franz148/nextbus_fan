@@ -7,6 +7,9 @@ import Fermate from "../views/Fermate.vue";
 import Linee from "../views/Linee.vue";
 import Preferiti from "../views/Preferiti.vue";
 
+//**file temporaneo API
+import Api from "../api/Api.vue";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -14,7 +17,10 @@ const routes = [
     { path: "/", redirect: "/pianifica" },
     { path: "/fermate", component: Fermate },
     { path: "/linee", component: Linee },
-    { path: "/preferiti", component: Preferiti }
+    { path: "/preferiti", component: Preferiti },
+
+    //**file temporaneo API
+    { path: "/api", component: Api }
 ];
 
 const router = new VueRouter({
