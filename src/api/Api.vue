@@ -1,15 +1,6 @@
 <template>
   <div>
-    <md-list>
-      <div>
-        <md-list-item>
-          <div class="md-list-item-text">
-            <span>{{}}</span>
-          </div>
-        </md-list-item>
-        <md-divider></md-divider>
-      </div>
-    </md-list>
+    
   </div>
 </template>
 
