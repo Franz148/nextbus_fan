@@ -46,7 +46,7 @@
 
         <md-card-actions>
           <md-button>Annulla</md-button>
-          <md-button type="submit" class="md-primary">Cerca</md-button>
+          <md-button type="submit" class="md-primary" @click.stop.prevent="submit()">Cerca</md-button>
         </md-card-actions>
       </md-card>
     </form>
@@ -83,7 +83,13 @@ export default {
     ],
 
     selectedDate: format(new Date(), "MM/dd/yyyy")
-  })
+  }),
+
+  methods: {
+    submit(){
+      this.$router.push("/pianifica/viaggio?");
+    }
+  }
 };
 </script>
 
