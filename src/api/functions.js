@@ -29,6 +29,48 @@ export default {
     },
 
     getLineaSingolaAccessibilita(agencyId, routeId) {
+
+        //this.linea = results.data
+
+        //     <md-list class="md-layout-item md-size-80">
+        //   <div v-for="fermata in linea" :key="fermata.id">
+        //     <md-divider></md-divider>
+        //     <md-list-item>
+        //       <md-icon>directions_bus</md-icon>
+
+        //       <span class="md-list-item-text">{{fermata.name}}</span>
+
+        //       <md-icon class="md-primary" v-if="fermata.wheelChairBoarding == 1">accessible</md-icon>
+        //       <md-icon class="md-primary">favorite_border</md-icon>
+        //     </md-list-item>
+        //   </div>
+        // </md-list>
         return axios.get("https://os.smartcommunitylab.it/core.mobility/getstops/" + agencyId + "/" + routeId);
+    },
+
+    getArrayOrarioTotaleLineaSingola(agencyId, routeId) {
+
+        /*
+        <md-field class="md-layout-item md-size-80">
+      <label>Quale orario vuoi?</label>
+      <md-input type="number" v-model="numOrario"></md-input>
+    </md-field>
+
+    <p class="md-layout-item md-size-80">Orario selezionato: {{numOrario}} | Orari totali: {{orari.length - 1}}</p>
+
+    <md-list class="md-layout-item md-size-80" v-if="numOrario != null ">
+      <md-list-item v-for="orarioSingolo in orari[numOrario].stopTimes" :key="orarioSingolo">
+        <md-icon>move_to_inbox</md-icon>
+        <span class="md-list-item-text">{{orarioSingolo}}</span>
+      </md-list-item>
+    </md-list>
+
+        */
+
+        //this.orari = data;
+
+        return this.getLineaSingolaConOrario(agencyId, routeId).then(results => {
+            return results.data.trips;
+        });
     }
 }
