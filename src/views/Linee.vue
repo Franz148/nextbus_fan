@@ -1,6 +1,6 @@
 <template>
   <div class="md-layout md-gutter md-alignment-center-center">
-    <md-list class="md-double-line">
+    <md-list class="md-double-line md-layout-item md-size-50">
       <md-divider></md-divider>
       <md-list-item >
         <md-avatar>
