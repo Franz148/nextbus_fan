@@ -7,6 +7,9 @@ import Fermate from "../views/Fermate.vue";
 import Linee from "../views/Linee.vue";
 import Preferiti from "../views/Preferiti.vue";
 
+//fermata singola prova
+import FermataSingola from "../views/FermataSingola.vue";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -14,7 +17,9 @@ const routes = [
     { path: "/", redirect: "/pianifica" },
     { path: "/fermate", component: Fermate },
     { path: "/linee", component: Linee },
-    { path: "/preferiti", component: Preferiti }
+    { path: "/preferiti", component: Preferiti },
+    //fermata singola prova
+    { path: "/fermataSingola", component: FermataSingola }
 ];
 
 const router = new VueRouter({
