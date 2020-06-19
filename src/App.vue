@@ -22,14 +22,24 @@
       </md-app-toolbar>
 
       <md-app-content>
-        <router-view class="margin"></router-view>        
+        <!-- Gestione accesso -->
+        <md-dialog-prompt
+          :md-active.sync="active"
+          v-model="value"
+          md-title="Come ti chiami?"
+          md-input-maxlength="15"
+          md-input-placeholder="Inserisci il tuo nome..."
+          md-confirm-text="Inserisci"
+          md-cancel-text="Annulla"
+          @md-confirm="ciao"
+        />
+        <router-view class="margin"></router-view>
       </md-app-content>
     </md-app>
   </div>
 </template>
 
 <style>
-
 .md-app-toolbar {
   z-index: 900 !important;
 }
@@ -43,15 +53,25 @@
   width: 100%;
 }
 
+.md-dialog-container {
+  transform: scale(1) !important;
+}
+
 .margin {
   margin-top: 20px;
 }
-
 </style>
 
 <script>
 export default {
   data: () => ({
-  })
+    active: true,
+    value: null
+  }),
+  methods: {
+    ciao() {
+      alert("Ciao " + this.value);
+    }
+  }
 };
 </script>
