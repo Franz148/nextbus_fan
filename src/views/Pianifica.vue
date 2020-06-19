@@ -8,31 +8,38 @@
 
         <md-card-content>
           <div class="md-layout md-gutter">
-            <div class="md-layout-item md-size-80">
-                <label class="md-subheading">Partenza</label>
-                <md-autocomplete
-                  v-model="selectedEmployee"
-                  :md-options="employees"
-                  :md-open-on-focus="false"
-                >
-                  <label>Inserisci un indirizzo</label>
-                </md-autocomplete>
+            <div class="md-layout-item md-size-90">
+              <label class="md-subheading">Partenza</label>
+              <md-autocomplete
+                v-model="selectedEmployee1"
+                :md-options="employees1"
+                :md-open-on-focus="false"
+              >
+                <label>Indirizzo di partenza</label>
+              </md-autocomplete>
             </div>
 
-            <div class="md-layout-item md-size-80">
+            <div class="md-layout-item md-size-90">
               <label class="md-subheading">Arrivo</label>
-                <md-autocomplete
-                  v-model="selectedEmployee"
-                  :md-options="employees"
-                  :md-open-on-focus="false"
-                >
-                  <label>Inserisci un indirizzo</label>
-                </md-autocomplete>
+              <md-autocomplete
+                v-model="selectedEmployee2"
+                :md-options="employees2"
+                :md-open-on-focus="false"
+              >
+                <label>Indirizzo di arrivo</label>
+              </md-autocomplete>
             </div>
 
-            <div class="md-layout-item md-size-80 md-layout">
-              <label class="md-subheading">Quando</label>
-              
+            <div class="md-layout-item md-size-100 md-layout md-alignment-center-space-between">
+              <label class="md-subheading md-layout-item md-size-100">Data e ora della partenza 🚌</label>
+              <div class="md-layout-item md-size-50">
+                <md-datepicker v-model="selectedDate" :md-open-on-focus="true" md-immediately>
+                  <label>Seleziona la data</label>
+                </md-datepicker>
+              </div>
+              <div class="md-layout-item md-size-50 md-layout md-alignment-center-center">
+                <input type="time" class="inputTime" />
+              </div>
             </div>
           </div>
         </md-card-content>
@@ -47,15 +54,23 @@
 </template>
 
 <script>
+import format from 'date-fns/format';
+
 export default {
   data: () => ({
-    selectedEmployee: null,
-    employees: [
+    selectedEmployee1: null,
+
+    selectedEmployee2: null,
+
+    employees1: [
       "Jim Halpert",
       "Dwight Schrute",
       "Michael Scott",
       "Pam Beesly",
-      "Angela Martin",
+      "Angela Martin"
+    ],
+
+    employees2: [
       "Kelly Kapoor",
       "Ryan Howard",
       "Kevin Malone",
@@ -65,10 +80,12 @@ export default {
       "Stanley Hudson",
       "Meredith Palmer",
       "Phyllis Lapin-Vance"
-    ]
+    ],
+
+    selectedDate: format(new Date(), "MM/dd/yyyy")
   })
 };
 </script>
 
-<style>
+<style scoped>
 </style>
