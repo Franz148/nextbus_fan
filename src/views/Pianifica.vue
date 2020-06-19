@@ -45,16 +45,21 @@
         </md-card-content>
 
         <md-card-actions>
-          <md-button>Annulla</md-button>
+          <md-button type="reset" @click="reset()">Annulla</md-button>
           <md-button type="submit" class="md-primary" @click.stop.prevent="submit()">Cerca</md-button>
         </md-card-actions>
       </md-card>
     </form>
+
+    <div class="md-layout-item md-size-100">
+      <br><br>
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
 <script>
-import format from 'date-fns/format';
+import format from "date-fns/format";
 
 export default {
   data: () => ({
@@ -86,8 +91,12 @@ export default {
   }),
 
   methods: {
-    submit(){
+    submit() {
       this.$router.push("/pianifica/viaggio?");
+    },
+
+    reset() {
+      this.$router.push("/pianifica");
     }
   }
 };

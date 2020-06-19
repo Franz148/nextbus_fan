@@ -3,13 +3,20 @@ import VueRouter from "vue-router";
 
 //Pagine collegate
 import Pianifica from "../views/Pianifica.vue";
+import Viaggio from "../views/Viaggio.vue";
+
 import Linee from "../views/Linee.vue";
 import Preferiti from "../views/Preferiti.vue";
 
 Vue.use(VueRouter);
 
-const routes = [
-    { path: "/pianifica", component: Pianifica },
+const routes = [{
+        path: "/pianifica",
+        component: Pianifica,
+        children: [
+            { path: "viaggio", component: Viaggio }
+        ]
+    },
     { path: "/", redirect: "/pianifica" },
     { path: "/linee", component: Linee },
     { path: "/preferiti", component: Preferiti }
