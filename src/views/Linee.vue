@@ -10,7 +10,7 @@
         </md-avatar>
         <div class="md-list-item-text">
           <span>Linea Uno</span>
-          <span>Direzione Sopramonte</span>
+          <span>Direzione Ospedale</span>
         </div>
       </md-list-item>
       <md-divider></md-divider>
