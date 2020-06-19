@@ -7,7 +7,10 @@ import Linee from "../views/Linee.vue";
 import Preferiti from "../views/Preferiti.vue";
 
 //fermata singola prova
-import FermataSingola from "../views/FermataSingola.vue";
+//import FermataSingola from "../views/FermataSingola.vue";
+
+//linea singola prova
+import LineaSingola from "../views/LineaSingola.vue";
 
 Vue.use(VueRouter);
 
@@ -17,7 +20,9 @@ const routes = [
     { path: "/linee", component: Linee },
     { path: "/preferiti", component: Preferiti },
     //fermata singola prova
-    { path: "/fermataSingola", component: FermataSingola }
+    //{ path: "/fermataSingola", component: FermataSingola }
+    //linea singola prova
+    { path: "/lineaSingola", component: LineaSingola }
 ];
 
 const router = new VueRouter({
