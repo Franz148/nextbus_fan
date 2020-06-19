@@ -1,25 +1,55 @@
 <template>
   <div class="md-layout md-gutter md-alignment-center-center">
+    <md-button class="md-primary md-raised" @click="ordinaLinee">Ordina</md-button>
     <md-list class="md-double-line md-layout-item md-size-50">
-      <md-divider></md-divider>
-      <md-list-item >
-        <md-avatar>
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/NYCS-bull-trans-1.svg/1200px-NYCS-bull-trans-1.svg.png"
-          />
-        </md-avatar>
-        <div class="md-list-item-text">
-          <span>Linea Uno</span>
-          <span>Direzione Ospedale</span>
-        </div>
-      </md-list-item>
-      <md-divider></md-divider>
+      <div v-for="linea in linee" :key="linea.id.id">
+        <md-list-item>
+          <div class="md-list-item-text">
+            <span>{{linea.routeShortName}}</span>
+            <span>{{linea.routeLongName}}</span>
+          </div>
+        </md-list-item>
+        <md-divider></md-divider>
+      </div>
     </md-list>
   </div>
 </template>
 
 <script>
-export default {};
+import Functions from "../api/functions.js";
+
+export default {
+  data: () => ({
+    linee: []
+  }),
+  created: function() {
+    Functions.getLinee(12)
+      .then(results => {
+        this.linee = results.data;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  },
+  methods: {
+    ordinaLinee() { let confronta = (a, b) => {
+      const nameRouteA = a.id.id.toUpperCase();
+      const nameRouteB = b.id.id.toUpperCase();
+
+      let comparison = 0;
+      if (nameRouteA > nameRouteB) {
+        comparison = 1;
+      } else if (nameRouteA < nameRouteB) {
+        comparison = -1;
+      }
+      return comparison;
+    }
+      this.linee.sort(confronta);
+      console.log(this.linee);
+    }
+   
+  }
+};
 </script>
 
 <style>
