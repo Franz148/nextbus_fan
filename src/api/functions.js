@@ -72,5 +72,34 @@ export default {
         return this.getLineaSingolaConOrario(agencyId, routeId).then(results => {
             return results.data.trips;
         });
+    },
+
+    //Funzione di prova per API con SingleJourney
+    pianificaViaggio() {
+        return axios.get("https://dev.smartcommunitylab.it/core.mobility/plansinglejourney/", {
+            params: {
+                "from": {
+                    "lon": "11.151796",
+                    "stopId": null,
+                    "name": null,
+                    "stopCode": null,
+                    "lat": "46.066799"
+                },
+                "to": {
+                    "lon": "11.11889",
+                    "stopId": null,
+                    "name": null,
+                    "stopCode": null,
+                    "lat": "46.066695"
+                },
+                "routeType": "fastest",
+                "resultsNumber": 1,
+                "departureTime": "00:00PM",
+                "date": "06/20/2020",
+                "transportTypes": [
+                    "TRANSIT"
+                ]
+            }
+        });
     }
 }

@@ -6,7 +6,7 @@
       </md-card-header>
 
       <md-card-content>
-
+        
       </md-card-content>
 
       <md-card-actions>
@@ -18,7 +18,19 @@
 </template>
 
 <script>
-export default {};
+import Functions from "../api/functions.js";
+
+export default {
+    data: () => ({
+
+    }),
+    created: function(){
+        Functions.pianificaViaggio()
+        .then(results => {
+            console.log(results);
+        });
+    }
+};
 </script>
 
 <style>
