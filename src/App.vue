@@ -24,8 +24,8 @@
       <md-app-content>
         <!-- Gestione accesso -->
         <md-dialog-prompt
-          :md-active.sync="active"
-          v-model="value"
+          :md-active.sync="activeDialog"
+          v-model="nomeUtente"
           md-title="Come ti chiami?"
           md-input-maxlength="15"
           md-input-placeholder="Inserisci il tuo nome..."
@@ -65,12 +65,12 @@
 <script>
 export default {
   data: () => ({
-    active: true,
-    value: null
+    activeDialog: true,
+    nomeUtente: null
   }),
   methods: {
     ciao() {
-      alert("Ciao " + this.value);
+      alert("Ciao " + this.nomeUtente);
     }
   }
 };
