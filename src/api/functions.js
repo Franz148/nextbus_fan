@@ -104,7 +104,7 @@ export default {
             "departureTime": oraPartenza, //formato 00:00AM/PM
             "date": dataPartenza, //formato MM/dd/yyyy
             "routeType": "fastest",
-            "resultsNumber": 2
+            "resultsNumber": 5
         });
     },
 
