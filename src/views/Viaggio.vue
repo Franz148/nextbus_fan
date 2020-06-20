@@ -6,44 +6,43 @@
       </md-card-header>
 
       <md-card-content>
-        {{indirizzoP}}
-        {{indirizzoA}}
-        {{dataPartenza}}
-        {{oraPartenza}}
         <md-list md-expand-single="true">
-          <md-list-item md-expand v-for="viaggio in risultati" :key="viaggio.duration">
-            <md-icon v-if="viaggio.promoted">directions_walk</md-icon>
-            <md-icon v-if="!viaggio.promoted">directions_bus</md-icon>
+          <div v-for="viaggio in risultati" :key="viaggio.duration">
+            <md-list-item md-expand>
+              <md-icon v-if="viaggio.walkingDuration == (viaggio.duration / 1000)">directions_walk</md-icon>
+              <md-icon v-if="viaggio.walkingDuration != (viaggio.duration / 1000)">directions_bus</md-icon>
 
-            <span class="md-list-item-text">
-              Durata
-              <b>{{msToHMS(viaggio.duration)}}</b>
-            </span>
+              <span class="md-list-item-text">
+                Durata
+                <b>{{msToHMS(viaggio.duration)}}</b>
+              </span>
 
-            <span class="md-list-item-text">
-              Partenza
-              <b>{{convertTimestampToTime(viaggio.startime)}}</b>
-            </span>
+              <span class="md-list-item-text">
+                Partenza
+                <b>{{convertTimestampToTime(viaggio.startime)}}</b>
+              </span>
 
-            <span class="md-list-item-text">
-              Arrivo
-              <b>{{convertTimestampToTime(viaggio.endtime)}}</b>
-            </span>
+              <span class="md-list-item-text">
+                Arrivo
+                <b>{{convertTimestampToTime(viaggio.endtime)}}</b>
+              </span>
 
-            <md-list slot="md-expand">
-              <md-list-item
-                class="md-inset"
-                v-for="(item, index) in viaggio.leg"
-                :key="item.endtime"
-              >
-                <md-icon v-if="item.transport.type == 'WALK'">directions_walk</md-icon>
-                <md-icon v-if="item.transport.type == 'BUS'">directions_bus</md-icon>
-                <span
-                  class="md-list-item-text"
-                >{{index + 1}}) P: {{item.from.name}} | A: {{item.to.name}}</span>
-              </md-list-item>
-            </md-list>
-          </md-list-item>
+              <md-list slot="md-expand">
+                <md-list-item
+                  class="md-inset"
+                  v-for="(item, index) in viaggio.leg"
+                  :key="item.endtime"
+                >
+                  <md-icon v-if="item.transport.type == 'WALK'">directions_walk</md-icon>
+                  <md-icon v-if="item.transport.type == 'BUS'">directions_bus</md-icon>
+                  <md-icon v-if="item.transport.type == 'TRAIN'">train</md-icon>
+                  <span class="md-list-item-text" v-if="item.transport.type != 'BUS'">{{index + 1}}) P: {{item.from.name}} | A: {{item.to.name}}</span>
+                  <span class="md-list-item-text" v-if="item.transport.type == 'BUS'">{{index + 1}}) Linea: {{item.transport.routeShortName}} | P: {{item.from.name}} | A: {{item.to.name}}</span>
+                </md-list-item>
+              </md-list>
+            </md-list-item>
+            <md-divider></md-divider>
+          </div>
         </md-list>
       </md-card-content>
     </md-card>
@@ -111,12 +110,12 @@ export default {
     this.dataPartenza = this.$route.query.dataPartenza;
     this.oraPartenza = this.tConvert(this.$route.query.oraPartenza);
 
-    if (this.risultati.length != 0) {
+    if (this.risultati.length == 0) {
       Functions.pianificaViaggio(
-        "piazza dante trento",
-        "dipartimento di lettere trento",
-        "06/20/2020",
-        "07:00PM"
+        this.indirizzoP,
+        this.indirizzoA,
+        this.dataPartenza,
+        this.oraPartenza
       ).then(results => {
         this.risultati = results.data;
         console.log(results);
