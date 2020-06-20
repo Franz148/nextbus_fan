@@ -10,35 +10,29 @@
           <div class="md-layout md-gutter">
             <div class="md-layout-item md-size-90">
               <label class="md-subheading">Partenza</label>
-              <md-autocomplete
-                v-model="selectedEmployee1"
-                :md-options="employees1"
-                :md-open-on-focus="false"
-              >
+              <md-field>
                 <label>Indirizzo di partenza</label>
-              </md-autocomplete>
+                <md-input v-model="indirizzoP"></md-input>
+              </md-field>
             </div>
 
             <div class="md-layout-item md-size-90">
               <label class="md-subheading">Arrivo</label>
-              <md-autocomplete
-                v-model="selectedEmployee2"
-                :md-options="employees2"
-                :md-open-on-focus="false"
-              >
+              <md-field>
                 <label>Indirizzo di arrivo</label>
-              </md-autocomplete>
+                <md-input v-model="indirizzoA"></md-input>
+              </md-field>
             </div>
 
             <div class="md-layout-item md-size-100 md-layout md-alignment-center-space-between">
               <label class="md-subheading md-layout-item md-size-100">Data e ora della partenza 🚌</label>
               <div class="md-layout-item md-size-50">
-                <md-datepicker v-model="selectedDate" :md-open-on-focus="true" md-immediately>
+                <md-datepicker v-model="dataPartenza" :md-open-on-focus="true" md-immediately>
                   <label>Seleziona la data</label>
                 </md-datepicker>
               </div>
               <div class="md-layout-item md-size-50 md-layout md-alignment-center-center">
-                <input type="time" class="inputTime" />
+                <input type="time" class="inputTime" v-model="oraPartenza"/>
               </div>
             </div>
           </div>
@@ -52,7 +46,8 @@
     </form>
 
     <div class="md-layout-item md-size-100">
-      <br><br>
+      <br />
+      <br />
       <router-view></router-view>
     </div>
   </div>
@@ -63,36 +58,22 @@ import format from "date-fns/format";
 
 export default {
   data: () => ({
-    selectedEmployee1: null,
-
-    selectedEmployee2: null,
-
-    employees1: [
-      "Jim Halpert",
-      "Dwight Schrute",
-      "Michael Scott",
-      "Pam Beesly",
-      "Angela Martin"
-    ],
-
-    employees2: [
-      "Kelly Kapoor",
-      "Ryan Howard",
-      "Kevin Malone",
-      "Creed Bratton",
-      "Oscar Nunez",
-      "Toby Flenderson",
-      "Stanley Hudson",
-      "Meredith Palmer",
-      "Phyllis Lapin-Vance"
-    ],
-
-    selectedDate: format(new Date(), "MM/dd/yyyy")
+    indirizzoP: null,
+    indirizzoA: null,
+    dataPartenza: format(new Date(), "MM/dd/yyyy"),
+    oraPartenza: null
   }),
 
   methods: {
     submit() {
-      this.$router.push("/pianifica/viaggio?");
+      let queryParams = {
+        indirizzoP : this.indirizzoP,
+        indirizzoA : this.indirizzoA,
+        dataPartenza: this.dataPartenza,
+        oraPartenza: this.oraPartenza
+      };
+
+      this.$router.push({path: "/pianifica/viaggio", query: queryParams});
     },
 
     reset() {
