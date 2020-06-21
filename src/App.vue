@@ -25,14 +25,16 @@
         <!-- Gestione accesso -->
         <md-dialog-prompt
           :md-active.sync="activeDialog"
-          v-model="nomeUtente"
+          v-model="inserimentoNomeUtente"
           md-title="Come ti chiami?"
           md-input-maxlength="15"
           md-input-placeholder="Inserisci il tuo nome..."
           md-confirm-text="Inserisci"
           md-cancel-text="Annulla"
-          @md-confirm="ciao"
+          v-if="!isLoggedIn"
+          @md-confirm="login()"
         />
+        Sono loggato e sono {{verifiedUsername}}!
         <router-view class="margin"></router-view>
       </md-app-content>
     </md-app>
@@ -63,15 +65,22 @@
 </style>
 
 <script>
+import DbFunctions from "./database/db-functions.js";
+
 export default {
   data: () => ({
     activeDialog: true,
-    nomeUtente: null
+    inserimentoNomeUtente: null,
+    isLoggedIn: DbFunctions.isLoggedIn(),
+    verifiedUsername: DbFunctions.getUsername()
   }),
   methods: {
-    ciao() {
-      alert("Ciao " + this.nomeUtente);
+    login() {
+      DbFunctions.login(this.inserimentoNomeUtente);
     }
+  },
+  updated: function() {
+    this.verifiedUsername = DbFunctions.getUsername();
   }
 };
 </script>
