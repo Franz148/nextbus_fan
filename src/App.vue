@@ -8,7 +8,13 @@
               <md-icon>directions_bus</md-icon>
             </md-button>
 
-            <span class="md-title">NextBus</span>
+            <span class="md-title">
+              NextBus
+              <span v-if="isLoggedIn">
+                - Ciao
+                <b>{{verifiedUsername}}</b>!
+              </span>
+            </span>
           </div>
         </div>
 
@@ -34,7 +40,6 @@
           v-if="!isLoggedIn"
           @md-confirm="login()"
         />
-        Sono loggato e sono {{verifiedUsername}}!
         <router-view class="margin"></router-view>
       </md-app-content>
     </md-app>
@@ -77,10 +82,8 @@ export default {
   methods: {
     login() {
       DbFunctions.login(this.inserimentoNomeUtente);
+      this.verifiedUsername = DbFunctions.getUsername();
     }
-  },
-  updated: function() {
-    this.verifiedUsername = DbFunctions.getUsername();
   }
 };
 </script>
