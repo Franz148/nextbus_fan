@@ -10,17 +10,17 @@
 
             <span class="md-title">
               NextBus
-              <span v-if="isLoggedIn">
+              <!-- <span v-if="isLoggedIn">
                 - Ciao
                 <b>{{verifiedUsername}}</b>!
-              </span>
+              </span> -->
             </span>
           </div>
-          <div class="md-toolbar-section-end">
+          <!-- <div class="md-toolbar-section-end">
             <md-button class="md-icon-button" @click="logout">
               <md-icon>exit_to_app</md-icon>
             </md-button>
-          </div>
+          </div> -->
         </div>
 
         <div class="md-toolbar-row">
@@ -33,6 +33,7 @@
       </md-app-toolbar>
 
       <md-app-content>
+        
         <!-- Gestione accesso -->
         <md-dialog-prompt
           :md-active.sync="activeDialog"
@@ -45,6 +46,7 @@
           v-if="!isLoggedIn"
           @md-confirm="login()"
         />
+        
         <router-view class="margin"></router-view>
       </md-app-content>
     </md-app>
@@ -83,26 +85,26 @@ export default {
     inserimentoNomeUtente: null,
     isLoggedIn: DbFunctions.isLoggedIn(),
     verifiedUsername: DbFunctions.getUsername()
-  }),
-  methods: {
-    login() {
-      DbFunctions.login(this.inserimentoNomeUtente);
-      this.verifiedUsername = DbFunctions.getUsername();
-      this.$router.go();
-    },
-    logout() {
-      DbFunctions.logout();
-      this.$router.go();
-    }
-  },
-  watch: {
-    $route: function() {
-      this.isLoggedIn = DbFunctions.isLoggedIn();
-      this.verifiedUsername = DbFunctions.getUsername();
-    },
-    isLoggedIn: () => {
-      this.verifiedUsername = DbFunctions.getUsername();
-    }
-  }
+   })
+  // methods: {
+  //   login() {
+  //     DbFunctions.login(this.inserimentoNomeUtente);
+  //     this.verifiedUsername = DbFunctions.getUsername();
+  //     this.$router.go();
+  //   },
+  //   logout() {
+  //     DbFunctions.logout();
+  //     this.$router.go();
+  //   }
+  // },
+  // watch: {
+  //   $route: function() {
+  //     this.isLoggedIn = DbFunctions.isLoggedIn();
+  //     this.verifiedUsername = DbFunctions.getUsername();
+  //   },
+  //   isLoggedIn: () => {
+  //     this.verifiedUsername = DbFunctions.getUsername();
+  //   }
+  //}
 };
 </script>
