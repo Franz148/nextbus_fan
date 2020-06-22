@@ -23,5 +23,9 @@ export default {
 
     isLoggedIn() {
         return !!localStorage.getItem("username");
+    },
+
+    logout() {
+        localStorage.removeItem("username");
     }
 }
