@@ -125,6 +125,7 @@ export default {
         return this.richiestaDatiPA(indirizzoPartenza, indirizzoArrivo)
             .then(responses => {
                 console.warn("Richieste rimanenti opencagedata.com: " + responses[1].data.rate.remaining);
+
                 partenza.lat = responses[0].data.results[0].geometry.lat;
                 partenza.lng = responses[0].data.results[0].geometry.lng;
 
