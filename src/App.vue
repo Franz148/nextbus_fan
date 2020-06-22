@@ -85,30 +85,6 @@ export default {
     inserimentoNomeUtente: null,
     isLoggedIn: DbFunctions.isLoggedIn(),
     verifiedUsername: DbFunctions.getUsername()
-   }),
-
-   created: function() {
-     
-   }
-  // methods: {
-  //   login() {
-  //     DbFunctions.login(this.inserimentoNomeUtente);
-  //     this.verifiedUsername = DbFunctions.getUsername();
-  //     this.$router.go();
-  //   },
-  //   logout() {
-  //     DbFunctions.logout();
-  //     this.$router.go();
-  //   }
-  // },
-  // watch: {
-  //   $route: function() {
-  //     this.isLoggedIn = DbFunctions.isLoggedIn();
-  //     this.verifiedUsername = DbFunctions.getUsername();
-  //   },
-  //   isLoggedIn: () => {
-  //     this.verifiedUsername = DbFunctions.getUsername();
-  //   }
-  //}
+   })
 };
 </script>
