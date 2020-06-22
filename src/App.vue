@@ -46,7 +46,7 @@
           v-if="!isLoggedIn"
           @md-confirm="login()"
         />
-        
+
         <router-view class="margin"></router-view>
       </md-app-content>
     </md-app>
@@ -81,11 +81,15 @@ import DbFunctions from "./database/db-functions.js";
 
 export default {
   data: () => ({
-    activeDialog: true,
+    activeDialog: false,
     inserimentoNomeUtente: null,
     isLoggedIn: DbFunctions.isLoggedIn(),
     verifiedUsername: DbFunctions.getUsername()
-   })
+   }),
+
+   created: function() {
+     
+   }
   // methods: {
   //   login() {
   //     DbFunctions.login(this.inserimentoNomeUtente);
