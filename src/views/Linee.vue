@@ -1,12 +1,16 @@
 <template>
   <div class="md-layout md-gutter md-alignment-center-center">
-    <md-button class="md-primary md-raised" @click="ordinaLinee">Ordina</md-button>
+    <!-- <md-button class="md-primary md-raised" @click="ordinaLinee">Ordina</md-button> -->
     <md-list class="md-double-line md-layout-item md-size-50">
-      <div v-for="linea in linee" :key="linea.id.id">
-        <md-list-item>
+     
+      <div v-for="linea in linee" :key="linea.id.id" > 
+        <md-list-item :to="'/fermata/' + linea.id.id">
+          
           <div class="md-list-item-text">
-            <span>{{linea.routeShortName}}</span>
+            <span> {{linea.id.id}} </span>
             <span>{{linea.routeLongName}}</span>
+            
+           
           </div>
         </md-list-item>
         <md-divider></md-divider>
@@ -31,24 +35,23 @@ export default {
         console.error(error);
       });
   },
-  methods: {
-    ordinaLinee() { let confronta = (a, b) => {
-      const nameRouteA = a.id.id.toUpperCase();
-      const nameRouteB = b.id.id.toUpperCase();
+  // methods: {
+  //   ordinaLinee() { let confronta = (a, b) => {
+  //     const nameRouteA = a.id.id.toUpperCase();
+  //     const nameRouteB = b.id.id.toUpperCase();
 
-      let comparison = 0;
-      if (nameRouteA > nameRouteB) {
-        comparison = 1;
-      } else if (nameRouteA < nameRouteB) {
-        comparison = -1;
-      }
-      return comparison;
-    }
-      this.linee.sort(confronta);
-      console.log(this.linee);
-    }
-   
-  }
+  //     let comparison = 0;
+  //     if (nameRouteA > nameRouteB) {
+  //       comparison = 1;
+  //     } else if (nameRouteA < nameRouteB) {
+  //       comparison = -1;
+  //     }
+  //     return comparison;
+  //   }
+  //     this.linee.sort(confronta);
+  //     console.log(this.linee);
+  //   }
+  // }
 };
 </script>
 
