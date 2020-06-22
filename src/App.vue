@@ -16,6 +16,11 @@
               </span>
             </span>
           </div>
+          <div class="md-toolbar-section-end">
+            <md-button class="md-icon-button" @click="logout">
+              <md-icon>exit_to_app</md-icon>
+            </md-button>
+          </div>
         </div>
 
         <div class="md-toolbar-row">
@@ -82,6 +87,20 @@ export default {
   methods: {
     login() {
       DbFunctions.login(this.inserimentoNomeUtente);
+      this.verifiedUsername = DbFunctions.getUsername();
+      this.$router.go();
+    },
+    logout() {
+      DbFunctions.logout();
+      this.$router.go();
+    }
+  },
+  watch: {
+    $route: function() {
+      this.isLoggedIn = DbFunctions.isLoggedIn();
+      this.verifiedUsername = DbFunctions.getUsername();
+    },
+    isLoggedIn: () => {
       this.verifiedUsername = DbFunctions.getUsername();
     }
   }
