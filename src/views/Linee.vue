@@ -2,16 +2,13 @@
   <div class="md-layout md-gutter md-alignment-center-center">
     <!-- <md-button class="md-primary md-raised" @click="ordinaLinee">Ordina</md-button> -->
     <md-list class="md-double-line md-layout-item md-size-50">
-     
-      <div v-for="linea in linee" :key="linea.id.id" > 
+      <div v-for="linea in linee" :key="linea.id.id">
         <md-list-item :to="'/fermata/' + linea.id.id">
-          
           <div class="md-list-item-text">
-            <span> {{linea.id.id}} </span>
+            <span>{{linea.id.id}}</span>
             <span>{{linea.routeLongName}}</span>
-            
-           
           </div>
+          <md-icon>favorite_border</md-icon>
         </md-list-item>
         <md-divider></md-divider>
       </div>
@@ -34,7 +31,7 @@ export default {
       .catch(error => {
         console.error(error);
       });
-  },
+  }
   // methods: {
   //   ordinaLinee() { let confronta = (a, b) => {
   //     const nameRouteA = a.id.id.toUpperCase();
