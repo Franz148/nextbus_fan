@@ -8,8 +8,19 @@
               <md-icon>directions_bus</md-icon>
             </md-button>
 
-            <span class="md-title">NextBus</span>
+            <span class="md-title">
+              NextBus
+              <!-- <span v-if="isLoggedIn">
+                - Ciao
+                <b>{{verifiedUsername}}</b>!
+              </span> -->
+            </span>
           </div>
+          <!-- <div class="md-toolbar-section-end">
+            <md-button class="md-icon-button" @click="logout">
+              <md-icon>exit_to_app</md-icon>
+            </md-button>
+          </div> -->
         </div>
 
         <div class="md-toolbar-row">
@@ -22,17 +33,20 @@
       </md-app-toolbar>
 
       <md-app-content>
+        
         <!-- Gestione accesso -->
         <md-dialog-prompt
           :md-active.sync="activeDialog"
-          v-model="nomeUtente"
+          v-model="inserimentoNomeUtente"
           md-title="Come ti chiami?"
           md-input-maxlength="15"
           md-input-placeholder="Inserisci il tuo nome..."
           md-confirm-text="Inserisci"
           md-cancel-text="Annulla"
-          @md-confirm="ciao"
+          v-if="!isLoggedIn"
+          @md-confirm="login()"
         />
+
         <router-view class="margin"></router-view>
       </md-app-content>
     </md-app>
@@ -63,15 +77,14 @@
 </style>
 
 <script>
+import DbFunctions from "./database/db-functions.js";
+
 export default {
   data: () => ({
-    activeDialog: true,
-    nomeUtente: null
-  }),
-  methods: {
-    ciao() {
-      alert("Ciao " + this.nomeUtente);
-    }
-  }
+    activeDialog: false,
+    inserimentoNomeUtente: null,
+    isLoggedIn: DbFunctions.isLoggedIn(),
+    verifiedUsername: DbFunctions.getUsername()
+   })
 };
 </script>
