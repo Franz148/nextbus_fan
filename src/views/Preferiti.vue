@@ -19,68 +19,28 @@
           <md-card-header-text>
             <div class="md-title">Lista dei preferiti</div>
             <div class="md-subhead">
-              Fermate e linee preferite
-              <md-icon>favorite</md-icon>verranno visualizzate qui
+              Linee preferite verranno visualizzate qui
             </div>
           </md-card-header-text>
-
-          <md-menu md-size="medium" md-align-trigger>
-            <md-button class="md-icon-button" md-menu-trigger>
-              <md-icon>more_vert</md-icon>
-            </md-button>
-
-            <md-menu-content>
-              <md-menu-item>Filtro 1</md-menu-item>
-              <md-menu-item>Filtro 2</md-menu-item>
-            </md-menu-content>
-          </md-menu>
         </md-card-header>
 
         <md-card-content class="content">
-          <md-tabs class="tabs" md-alignment="centered">
-            <md-tab id="tab-preferiti-linee" md-label="Linee">
-              <md-list>
-                <div>
-                  <md-list-item>
-                    <md-avatar>
-                      <img src=""/>
-                    </md-avatar>
-                    <span class="md-list-item-text">
-                      <!--Linea {{n}}-->
-                    </span>
+          <md-list v-if="lineePreferite.length != 0">
+            <div v-for="linea in lineePreferite" :key="linea.idLinea">
+              <md-list-item>
+                <md-avatar>
+                  <img :src="getImageFromId(linea.idLinea)" />
+                </md-avatar>
+                <span class="md-list-item-text">{{returnLineaSingola(linea.idLinea).routeLongName}}</span>
 
-                    <md-button class="md-icon-button md-list-action">
-                      <md-icon class="md-accent">favorite</md-icon>
-                    </md-button>
-                  </md-list-item>
-                  <md-divider></md-divider>
-                </div>
-              </md-list>
-            </md-tab>
-
-            <md-tab id="tab-preferiti-fermate" md-label="Fermate">
-              <md-list>
-                <div>
-                  <!-- Inserire il :v-for qui per far in modo che sia incluso anche il <divider> -->
-                  <md-list-item>
-                    <md-avatar>
-                      <img
-                        src="https://images.unsplash.com/photo-1528731708534-816fe59f90cb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
-                      />
-                    </md-avatar>
-                    <span class="md-list-item-text">
-                      <!--Fermata {{n}}-->
-                    </span>
-
-                    <md-button class="md-icon-button md-list-action">
-                      <md-icon class="md-accent">favorite</md-icon>
-                    </md-button>
-                  </md-list-item>
-                  <md-divider></md-divider>
-                </div>
-              </md-list>
-            </md-tab>
-          </md-tabs>
+                <md-button class="md-icon-button md-list-action">
+                  <md-icon class="md-accent">favorite</md-icon>
+                </md-button>
+              </md-list-item>
+              <md-divider></md-divider>
+            </div>
+          </md-list>
+          <span v-if="lineePreferite.length == 0">Non sono presenti preferiti</span>
         </md-card-content>
       </md-card>
     </div>
@@ -90,21 +50,49 @@
 <script>
 import Accesso from "../login/access-functions.js";
 import Dbfunctions from "../database/db-functions.js";
+import Functions from "../api/functions.js";
 
 export default {
   data: () => ({
-    iconeLinee: [],
-    lineePreferiti: [],
-
+    datiLinee: [],
+    lineePreferite: []
   }),
   methods: {
     checkAutenticazione() {
       return Accesso.isLoggedIn();
+    },
+
+    getImageFromId(id) {
+      return require("../assets/iconeLinee/" + id + ".png");
+    },
+
+    returnLineaSingola(id) {
+      let i = 0;
+      let trovato = false;
+
+      let linea = [];
+
+      while (i < this.datiLinee.length || !trovato) {
+        if (id == this.datiLinee[i].id.id) {
+          trovato = true;
+          linea.push(this.datiLinee[i]);
+        }
+
+        i++;
+      }
+
+      return linea[0];
     }
   },
 
-  created: function() {
-    
+  beforeCreate: function() {
+    Dbfunctions.getLineePreferite().then(results => {
+      this.lineePreferite = results;
+    });
+
+    Functions.getLinee(12).then(results => {
+      this.datiLinee = results.data;
+    });
   }
 };
 </script>
