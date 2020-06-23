@@ -1,6 +1,7 @@
 export default {
     login(username) {
-        localStorage.setItem("username", username);
+        let newUser = username.charAt(0).toUpperCase() + username.slice(1);
+        localStorage.setItem("username", newUser);
     },
 
     getUsername() {
