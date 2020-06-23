@@ -5,12 +5,12 @@
         md-icon="account_circle"
         md-label="Visualizza i tuoi preferiti"
         md-description="Per poter salvare fermate e linee preferite devi effettuare l'accesso"
-        
+        v-if="!checkAutenticazione()"
       >
-        <md-button class="md-primary md-raised">Accedi</md-button>
+        <md-button class="md-primary md-raised" to="/accesso">Accedi</md-button>
       </md-empty-state>
 
-      <md-card class="md-layout-item md-xsmall-size-90 md-small-size-80 md-size-60"  md-with-hover>
+      <md-card class="md-layout-item md-xsmall-size-90 md-small-size-80 md-size-60" v-if="checkAutenticazione()" md-with-hover>
         <md-card-header>
           <md-card-header-text>
             <div class="md-title">Lista dei preferiti</div>
@@ -83,10 +83,18 @@
 </template>
 
 <script>
+
+import Accesso from "../login/access-functions.js";
+
 export default {
   data: () => ({
     
-  })
+  }),
+  methods: {
+    checkAutenticazione(){
+      return Accesso.isLoggedIn();
+    }
+  }
 };
 </script>
 

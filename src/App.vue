@@ -10,21 +10,23 @@
 
             <span class="md-title">
               NextBus
-              <span v-if="isLoggedIn">
-                Ciao
-                <b>{{verifiedUsername}}</b>!
+              <span v-if="checkAutenticazione()"> - Ciao
+                <b>{{getUsername()}}</b>!
               </span>
             </span>
           </div>
-          <!-- <div class="md-toolbar-section-end">
-            <md-button class="md-icon-button" @click="logout">
+          <div class="md-toolbar-section-end">
+            <md-button class="md-icon-button" v-if="!checkAutenticazione()" to="/accesso">
+              <md-icon>account_circle</md-icon>
+            </md-button>
+            <md-button class="md-icon-button" v-if="checkAutenticazione()" @click="logout()">
               <md-icon>exit_to_app</md-icon>
             </md-button>
-          </div>-->
+          </div>
         </div>
 
         <div class="md-toolbar-row">
-          <md-tabs class="md-primary" md-alignment="centered">
+          <md-tabs class="md-primary" md-alignment="centered" md-sync-route>
             <md-tab id="tab-pianifica" md-label="Pianifica" to="/pianifica"></md-tab>
             <md-tab id="tab-linee" md-label="Linee" to="/linee"></md-tab>
             <md-tab id="tab-preferiti" md-label="Preferiti" to="/preferiti"></md-tab>
@@ -33,21 +35,6 @@
       </md-app-toolbar>
 
       <md-app-content>
-        <!-- Gestione accesso -->
-        <md-dialog-prompt
-          :md-active.sync="activeDialog"
-          v-model="inserimentoNomeUtente"
-          md-title="Come ti chiami?"
-          md-input-maxlength="15"
-          md-input-placeholder="Inserisci il tuo nome..."
-          md-confirm-text="Inserisci"
-          md-cancel-text="Annulla"
-          v-if="!isLoggedIn"
-        />
-          <!-- @md-confirm="login" 
-          @md-cancel="logout"
-           -->
-
         <router-view class="margin"></router-view>
       </md-app-content>
     </md-app>
@@ -78,19 +65,20 @@
 </style>
 
 <script>
-import DbFunctions from "./database/db-functions.js";
+import Accesso from "./login/access-functions.js";
 
 export default {
-  data: () => ({
-    activeDialog: false,
-    isLoggedIn: DbFunctions.isLoggedIn(),
-    verifiedUsername: DbFunctions.getUsername(),
-    inserimentoNomeUtente: null
-  }),
+  data: () => ({}),
   methods: {
-    login() {
-      DbFunctions.login(this.inserimentoNomeUtente);
-      this.verifiedUsername = DbFunctions.getUsername();
+    checkAutenticazione() {
+      return Accesso.isLoggedIn();
+    },
+    logout() {
+      Accesso.logout();
+      this.$router.go();
+    },
+    getUsername() {
+      return Accesso.getUsername();
     }
   }
 };
