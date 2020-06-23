@@ -9,7 +9,12 @@ import "./style/custom-theme.scss";
 
 Vue.config.productionTip = false;
 
+
 Vue.use(VueMaterial);
+
+//Global configuration
+Vue.material.locale.dateFormat = "MM/dd/yyyy";
+Vue.material.locale.firstDayOfAWeek = 1;
 
 new Vue({
     router,
