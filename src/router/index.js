@@ -7,6 +7,7 @@ import Viaggio from "../views/Viaggio.vue";
 
 import Linee from "../views/Linee.vue";
 import Preferiti from "../views/Preferiti.vue";
+import Accesso from "../views/Accesso.vue";
 
 Vue.use(VueRouter);
 
@@ -19,7 +20,8 @@ const routes = [{
     },
     { path: "/", redirect: "/pianifica" },
     { path: "/linee", component: Linee },
-    { path: "/preferiti", component: Preferiti }
+    { path: "/preferiti", component: Preferiti },
+    { path: "/accesso", component: Accesso }
 ];
 
 const router = new VueRouter({

@@ -8,6 +8,9 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@firebase/app": "^0.6.6",
+    "@firebase/firestore": "^1.15.3",
+    "@firebase/storage": "^0.3.36",
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
     "date-fns": "^2.14.0",
