@@ -27,9 +27,9 @@
 
         <div class="md-toolbar-row">
           <md-tabs class="md-primary" md-alignment="centered" md-sync-route>
-            <md-tab id="tab-pianifica" md-label="Pianifica" to="/pianifica"></md-tab>
-            <md-tab id="tab-linee" md-label="Linee" to="/linee"></md-tab>
-            <md-tab id="tab-preferiti" md-label="Preferiti" to="/preferiti"></md-tab>
+            <md-tab id="tab-pianifica" md-icon="explore" md-label="Pianifica" to="/pianifica"></md-tab>
+            <md-tab id="tab-linee" md-icon="timeline" md-label="Linee" to="/linee"></md-tab>
+            <md-tab id="tab-preferiti" md-icon="favorite" md-label="Preferiti" to="/preferiti"></md-tab>
           </md-tabs>
         </div>
       </md-app-toolbar>
@@ -60,7 +60,7 @@
 }
 
 .margin {
-  margin-top: 20px;
+  margin-top: 50px;
 }
 </style>
 
