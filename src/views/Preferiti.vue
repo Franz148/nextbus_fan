@@ -1,7 +1,16 @@
 <template>
   <div>
-      <div class="md-layout md-alignment-center-center">
-      <md-card class="md-layout-item md-xsmall-size-90 md-small-size-80 md-size-60" md-with-hover>
+    <div class="md-layout md-alignment-center-center">
+      <md-empty-state
+        md-icon="account_circle"
+        md-label="Visualizza i tuoi preferiti"
+        md-description="Per poter salvare fermate e linee preferite devi effettuare l'accesso"
+        
+      >
+        <md-button class="md-primary md-raised">Accedi</md-button>
+      </md-empty-state>
+
+      <md-card class="md-layout-item md-xsmall-size-90 md-small-size-80 md-size-60"  md-with-hover>
         <md-card-header>
           <md-card-header-text>
             <div class="md-title">Lista dei preferiti</div>
@@ -27,14 +36,15 @@
           <md-tabs class="tabs" md-alignment="centered">
             <md-tab id="tab-preferiti-fermate" md-label="Fermate">
               <md-list>
-                <div> <!-- Inserire il :v-for qui per far in modo che sia incluso anche il <divider> -->
+                <div>
+                  <!-- Inserire il :v-for qui per far in modo che sia incluso anche il <divider> -->
                   <md-list-item>
                     <md-avatar>
                       <img
                         src="https://images.unsplash.com/photo-1528731708534-816fe59f90cb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
                       />
                     </md-avatar>
-                    <span class="md-list-item-text">Fermata {{n}}</span>
+                    <span class="md-list-item-text"><!--Fermata {{n}}--></span>
 
                     <md-button class="md-icon-button md-list-action">
                       <md-icon class="md-accent">favorite</md-icon>
@@ -47,14 +57,15 @@
 
             <md-tab id="tab-preferiti-linee" md-label="Linee">
               <md-list>
-                <div> <!-- Inserire il :v-for qui per far in modo che sia incluso anche il <divider> -->
+                <div>
+                  <!-- Inserire il :v-for qui per far in modo che sia incluso anche il <divider> -->
                   <md-list-item>
                     <md-avatar>
                       <img
                         src="https://images.unsplash.com/photo-1528731708534-816fe59f90cb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
                       />
                     </md-avatar>
-                    <span class="md-list-item-text">Linea {{n}}</span>
+                    <span class="md-list-item-text"><!--Linea {{n}}--></span>
 
                     <md-button class="md-icon-button md-list-action">
                       <md-icon class="md-accent">favorite</md-icon>
@@ -73,10 +84,11 @@
 
 <script>
 export default {
-
-}
+  data: () => ({
+    
+  })
+};
 </script>
 
 <style>
-
 </style>

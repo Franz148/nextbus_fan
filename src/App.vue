@@ -10,17 +10,17 @@
 
             <span class="md-title">
               NextBus
-              <!-- <span v-if="isLoggedIn">
-                - Ciao
+              <span v-if="isLoggedIn">
+                Ciao
                 <b>{{verifiedUsername}}</b>!
-              </span> -->
+              </span>
             </span>
           </div>
           <!-- <div class="md-toolbar-section-end">
             <md-button class="md-icon-button" @click="logout">
               <md-icon>exit_to_app</md-icon>
             </md-button>
-          </div> -->
+          </div>-->
         </div>
 
         <div class="md-toolbar-row">
@@ -33,7 +33,6 @@
       </md-app-toolbar>
 
       <md-app-content>
-        
         <!-- Gestione accesso -->
         <md-dialog-prompt
           :md-active.sync="activeDialog"
@@ -44,8 +43,10 @@
           md-confirm-text="Inserisci"
           md-cancel-text="Annulla"
           v-if="!isLoggedIn"
-          @md-confirm="login()"
         />
+          <!-- @md-confirm="login" 
+          @md-cancel="logout"
+           -->
 
         <router-view class="margin"></router-view>
       </md-app-content>
@@ -82,9 +83,15 @@ import DbFunctions from "./database/db-functions.js";
 export default {
   data: () => ({
     activeDialog: false,
-    inserimentoNomeUtente: null,
     isLoggedIn: DbFunctions.isLoggedIn(),
-    verifiedUsername: DbFunctions.getUsername()
-   })
+    verifiedUsername: DbFunctions.getUsername(),
+    inserimentoNomeUtente: null
+  }),
+  methods: {
+    login() {
+      DbFunctions.login(this.inserimentoNomeUtente);
+      this.verifiedUsername = DbFunctions.getUsername();
+    }
+  }
 };
 </script>
