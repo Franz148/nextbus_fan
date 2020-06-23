@@ -11,30 +11,19 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-//var db = firebase.firestore();
-//var iconeLinee = db.collection("iconeLinee");
+var db = firebase.firestore();
+var iconeLinee = db.collection("iconeLinee");
+//var elementiPreferiti = db.collection("elementiPreferiti");
 
 //var storage = firebase.storage();
 //var storageRef = storage.ref();
 
 export default {
-    /*aggiuntaIconeLineeAlDatabase() {
-        storageRef.child("iconeLinee/").listAll().then(function(result) {
-            console.log(result);
-            result.items.forEach(function(imageRef) {
-                imageRef.getDownloadURL().then(function(url) {
-                    console.log(url);
-                    console.log(imageRef.name.split(".png")[0]);
-                    let id = imageRef.name.split(".png")[0]
+    getLineePreferite() {
 
-                    iconeLinee
-                        .doc()
-                        .set({
-                            idLinea: id,
-                            iconaLinea: url
-                        });
-                });
-            });
-        });
-    },*/
+    },
+
+    getFermatePreferite() {
+
+    }
 }

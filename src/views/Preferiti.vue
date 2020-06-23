@@ -10,7 +10,11 @@
         <md-button class="md-primary md-raised" to="/accesso">Accedi</md-button>
       </md-empty-state>
 
-      <md-card class="md-layout-item md-xsmall-size-90 md-small-size-80 md-size-60" v-if="checkAutenticazione()" md-with-hover>
+      <md-card
+        class="md-layout-item md-xsmall-size-90 md-small-size-80 md-size-60"
+        v-if="checkAutenticazione()"
+        md-with-hover
+      >
         <md-card-header>
           <md-card-header-text>
             <div class="md-title">Lista dei preferiti</div>
@@ -34,17 +38,16 @@
 
         <md-card-content class="content">
           <md-tabs class="tabs" md-alignment="centered">
-            <md-tab id="tab-preferiti-fermate" md-label="Fermate">
+            <md-tab id="tab-preferiti-linee" md-label="Linee">
               <md-list>
                 <div>
-                  <!-- Inserire il :v-for qui per far in modo che sia incluso anche il <divider> -->
                   <md-list-item>
                     <md-avatar>
-                      <img
-                        src="https://images.unsplash.com/photo-1528731708534-816fe59f90cb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
-                      />
+                      <img src=""/>
                     </md-avatar>
-                    <span class="md-list-item-text"><!--Fermata {{n}}--></span>
+                    <span class="md-list-item-text">
+                      <!--Linea {{n}}-->
+                    </span>
 
                     <md-button class="md-icon-button md-list-action">
                       <md-icon class="md-accent">favorite</md-icon>
@@ -55,7 +58,7 @@
               </md-list>
             </md-tab>
 
-            <md-tab id="tab-preferiti-linee" md-label="Linee">
+            <md-tab id="tab-preferiti-fermate" md-label="Fermate">
               <md-list>
                 <div>
                   <!-- Inserire il :v-for qui per far in modo che sia incluso anche il <divider> -->
@@ -65,7 +68,9 @@
                         src="https://images.unsplash.com/photo-1528731708534-816fe59f90cb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
                       />
                     </md-avatar>
-                    <span class="md-list-item-text"><!--Linea {{n}}--></span>
+                    <span class="md-list-item-text">
+                      <!--Fermata {{n}}-->
+                    </span>
 
                     <md-button class="md-icon-button md-list-action">
                       <md-icon class="md-accent">favorite</md-icon>
@@ -83,17 +88,23 @@
 </template>
 
 <script>
-
 import Accesso from "../login/access-functions.js";
+import Dbfunctions from "../database/db-functions.js";
 
 export default {
   data: () => ({
-    
+    iconeLinee: [],
+    lineePreferiti: [],
+
   }),
   methods: {
-    checkAutenticazione(){
+    checkAutenticazione() {
       return Accesso.isLoggedIn();
     }
+  },
+
+  created: function() {
+    
   }
 };
 </script>
