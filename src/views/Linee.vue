@@ -4,7 +4,7 @@
 
     <md-list class="md-double-line md-layout-item md-size-50">
       <div v-for="linea in linee" :key="linea.id.id">
-        <md-list-item :to="'/LineaSingola/' + linea.id.id">
+        <md-list-item :to="'/lineaSingola/' + linea.id.id + '?routeLongName='  + linea.routeLongName">
           <md-avatar>
             <img :src="getImageFromId(linea.id.id)" />
           </md-avatar>
@@ -25,8 +25,7 @@ import Functions from "../api/functions.js";
 
 export default {
   data: () => ({
-    linee: [],
-    // iconeLinee: []
+    linee: []
   }),
   created: function() {
     Functions.getLinee(12)

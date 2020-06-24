@@ -19,10 +19,8 @@ const routes = [
     { path: "/", redirect: "/pianifica" },
     { path: "/linee", component: Linee },
     { path: "/preferiti", component: Preferiti },
-    //fermata singola prova
-    //{ path: "/fermataSingola", component: FermataSingola }
-    //linea singola prova
-    { path: "/lineaSingola", component: LineaSingola }
+    { path: "/lineaSingola/:id", component: LineaSingola }
+    
 ];
 
 const router = new VueRouter({

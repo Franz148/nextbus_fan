@@ -12,12 +12,12 @@
         <div class="md-layout md-gutter">
           <div class="md-layout-item md-size-15">
             <md-avatar>
-              <img src="https://placeimg.com/40/40/people/5" alt="People" />
+              <img :src="getImageFromId(idRoutes)" />
             </md-avatar>
           </div>
           <div class="md-layout-item md-size-85">
-            <div class="md-title">Linea singola</div>
-            <div class="md-subhead">andata</div>
+            <div class="md-title">{{$route.query.routeLongName}}</div>
+            
           </div>
         </div>
       </md-card-header>
@@ -40,9 +40,7 @@
               <!-- <span>{{ritornaAccessibile(accessibilita[n])}}</span> -->
             </div>
 
-            <md-icon
-              class="md-primary"
-            v-if="ritornaAccessibile(accessibilita,n) != 0">accessible</md-icon>
+            <md-icon class="md-primary" v-if="ritornaAccessibile(accessibilita,n) != 0">accessible</md-icon>
             <!-- <md-icon class="md-primary" v-if="ritornaAccessibile(accessibilita) != 0">accessible</md-icon> -->
             <!-- <md-icon class="md-primary">favorite_border</md-icon> -->
           </md-list-item>
@@ -78,12 +76,19 @@ export default {
     viaggi: [],
     accessibilita: [],
     accessibile: [],
-    idAgency: "12",
-    idRoutes: "08A"
+    idAgency: 12,
+    idRoutes: null
   }),
+
+  beforeCreate: function() {
+    
+    console.log(this.$route.params.id);
+    console.log(this.$route.query.routeLongName);
+  },
   created: function() {
+    this.idRoutes = this.$route.params.id;
     //(idAgency,idRotes)
-    Functions.getLineaSingolaConOrario(this.idAgency, this.idRoutes)
+    Functions.getLineaSingolaConOrario(this.idAgency, this.$route.params.id)
       .then(results => {
         this.idFermate = results.data.stopIds;
         this.nomeFermate = results.data.stopNames;
@@ -114,6 +119,10 @@ export default {
       });
   },
   methods: {
+    
+    getImageFromId(id) {
+      return require("../assets/iconeLinee/" + id + ".png");
+    },
     /* ritornaAccessibile(accessibile)
     {
       return accessibile.wheelChairBoarding;

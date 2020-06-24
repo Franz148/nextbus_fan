@@ -13,7 +13,7 @@
         </div>
 
         <div class="md-toolbar-row">
-          <md-tabs class="md-primary" md-alignment="centered">
+          <md-tabs class="md-primary" md-alignment="centered" md-sync-route> 
             <md-tab id="tab-pianifica" md-label="Pianifica" to="/pianifica"></md-tab>
             <md-tab id="tab-linee" md-label="Linee" to="/linee"></md-tab>
             <md-tab id="tab-preferiti" md-label="Preferiti" to="/preferiti"></md-tab>
