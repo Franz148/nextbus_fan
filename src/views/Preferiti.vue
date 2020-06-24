@@ -27,7 +27,7 @@
         <md-card-content class="content">
           <md-list v-if="lineePreferite.length != 0">
             <div v-for="linea in lineePreferite" :key="linea.idLinea">
-              <md-list-item>
+              <md-list-item :to="'/lineaSingola/' + linea.idLinea + '?routeLongName=' + returnLineaSingola(linea.idLinea).routeLongName">
                 <md-avatar>
                   <img :src="getImageFromId(linea.idLinea)" />
                 </md-avatar>
