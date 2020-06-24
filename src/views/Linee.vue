@@ -26,7 +26,7 @@ import Functions from "../api/functions.js";
 export default {
   data: () => ({
     linee: [],
-    iconeLinee: []
+    // iconeLinee: []
   }),
   created: function() {
     Functions.getLinee(12)
