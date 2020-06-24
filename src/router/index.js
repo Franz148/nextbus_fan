@@ -9,6 +9,12 @@ import Linee from "../views/Linee.vue";
 import Preferiti from "../views/Preferiti.vue";
 import Accesso from "../views/Accesso.vue";
 
+//fermata singola prova
+//import FermataSingola from "../views/FermataSingola.vue";
+
+//linea singola prova
+import LineaSingola from "../views/LineaSingola.vue";
+
 Vue.use(VueRouter);
 
 const routes = [{
@@ -21,6 +27,7 @@ const routes = [{
     { path: "/", redirect: "/pianifica" },
     { path: "/linee", component: Linee },
     { path: "/preferiti", component: Preferiti },
+    { path: "/lineaSingola/:id", component: LineaSingola },
     { path: "/accesso", component: Accesso }
 ];
 
