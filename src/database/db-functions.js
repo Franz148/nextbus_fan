@@ -11,24 +11,13 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 var db = firebase.firestore();
-var iconeLinee = db.collection("iconeLinee");
+// var iconeLinee = db.collection("iconeLinee");
 
 // var storage = firebase.storage();
 // var storageRef = storage.ref();
 
 export default {
-    getIconeLinee() {
-        var arrayLinee = [];
-        return iconeLinee.get().then(results => {
-            results.forEach(doc => {
-                arrayLinee.push(doc.data());
-            });
-
-            return arrayLinee;
-        });
-
-
-    },
+   
     //     /*aggiuntaIconeLineeAlDatabase() {
     //         storageRef.child("iconeLinee/").listAll().then(function(result) {
     //             console.log(result);
