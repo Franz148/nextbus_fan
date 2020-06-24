@@ -8,28 +8,40 @@
               <md-icon>directions_bus</md-icon>
             </md-button>
 
-            <span class="md-title">NextBus</span>
+            <span class="md-title">
+              NextBus
+              <span v-if="checkAutenticazione()"> - Ciao
+                <b>{{getUsername()}}</b>!
+              </span>
+            </span>
+          </div>
+          <div class="md-toolbar-section-end">
+            <md-button class="md-icon-button" v-if="!checkAutenticazione()" to="/accesso">
+              <md-icon>account_circle</md-icon>
+            </md-button>
+            <md-button class="md-icon-button" v-if="checkAutenticazione()" @click="logout()">
+              <md-icon>exit_to_app</md-icon>
+            </md-button>
           </div>
         </div>
 
         <div class="md-toolbar-row">
-          <md-tabs class="md-primary" md-alignment="centered" md-sync-route> 
-            <md-tab id="tab-pianifica" md-label="Pianifica" to="/pianifica"></md-tab>
-            <md-tab id="tab-linee" md-label="Linee" to="/linee"></md-tab>
-            <md-tab id="tab-preferiti" md-label="Preferiti" to="/preferiti"></md-tab>
+          <md-tabs class="md-primary" md-alignment="centered" md-sync-route>
+            <md-tab id="tab-pianifica" md-icon="explore" md-label="Pianifica" to="/pianifica"></md-tab>
+            <md-tab id="tab-linee" md-icon="timeline" md-label="Linee" to="/linee"></md-tab>
+            <md-tab id="tab-preferiti" md-icon="favorite" md-label="Preferiti" to="/preferiti"></md-tab>
           </md-tabs>
         </div>
       </md-app-toolbar>
 
       <md-app-content>
-        <router-view class="margin"></router-view>        
+        <router-view class="margin"></router-view>
       </md-app-content>
     </md-app>
   </div>
 </template>
 
 <style>
-
 .md-app-toolbar {
   z-index: 900 !important;
 }
@@ -43,15 +55,31 @@
   width: 100%;
 }
 
-.margin {
-  margin-top: 20px;
+.md-dialog-container {
+  transform: scale(1) !important;
 }
 
+.margin {
+  margin-top: 50px;
+}
 </style>
 
 <script>
+import Accesso from "./login/access-functions.js";
+
 export default {
-  data: () => ({
-  })
+  data: () => ({}),
+  methods: {
+    checkAutenticazione() {
+      return Accesso.isLoggedIn();
+    },
+    logout() {
+      Accesso.logout();
+      this.$router.go();
+    },
+    getUsername() {
+      return Accesso.getUsername();
+    }
+  }
 };
 </script>

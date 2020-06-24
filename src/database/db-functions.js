@@ -2,55 +2,34 @@ import firebase from "@firebase/app";
 import "@firebase/firestore";
 import "@firebase/storage";
 
+import Accesso from "../login/access-functions.js";
+
 const firebaseConfig = {
     apiKey: "AIzaSyDlmXCeXTgEEgjlQJ1fRUJGITc1ujPlW7g",
     authDomain: "nextbus-38e73.firebaseapp.com",
-    projectId: "nextbus-38e73",
-    storageBucket: "nextbus-38e73.appspot.com"
+    projectId: "nextbus-38e73"
 };
 
 firebase.initializeApp(firebaseConfig);
-var db = firebase.firestore();
-// var iconeLinee = db.collection("iconeLinee");
 
-// var storage = firebase.storage();
-// var storageRef = storage.ref();
+var db = firebase.firestore();
+var elementiPreferiti = db.collection("elementiPreferiti");
 
 export default {
-   
-    //     /*aggiuntaIconeLineeAlDatabase() {
-    //         storageRef.child("iconeLinee/").listAll().then(function(result) {
-    //             console.log(result);
-    //             result.items.forEach(function(imageRef) {
-    //                 imageRef.getDownloadURL().then(function(url) {
-    //                     console.log(url);
-    //                     console.log(imageRef.name.split(".png")[0]);
-    //                     let id = imageRef.name.split(".png")[0]
+    getLineePreferite() {
+        var user = Accesso.getUsername().toLowerCase();
+        var arrayLinee = [];
 
-    //                     iconeLinee
-    //                         .doc()
-    //                         .set({
-    //                             idLinea: id,
-    //                             iconaLinea: url
-    //                         });
-    //                 });
-    //             });
-    //         });
-    //     },
+        return elementiPreferiti
+            .where("idFermata", "==", "-1")
+            .where("username", "==", user)
+            .get()
+            .then(results => {
+                results.forEach(doc => {
+                    arrayLinee.push(doc.data());
+                });
 
-    login(username) {
-        localStorage.setItem("username", username);
-    },
-
-    getUsername() {
-        return localStorage.getItem("username");
-    },
-
-    isLoggedIn() {
-        return !!localStorage.getItem("username");
-    },
-
-    logout() {
-        localStorage.removeItem("username");
+                return arrayLinee;
+            });
     }
 }

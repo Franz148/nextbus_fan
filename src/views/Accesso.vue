@@ -1,0 +1,39 @@
+<template>
+  <div>
+    <!-- Gestione accesso -->
+    <md-dialog-prompt
+      :md-active.sync="activeDialog"
+      v-model="inserimentoNomeUtente"
+      md-title="Come ti chiami?"
+      md-input-maxlength="15"
+      md-input-placeholder="Inserisci il tuo nome..."
+      md-confirm-text="Inserisci"
+      md-cancel-text="Annulla"
+      @md-confirm="login"
+      @md-cancel="annulla"
+    />
+  </div>
+</template>
+
+<script>
+import Accesso from "../login/access-functions.js";
+
+export default {
+  data: () => ({
+    activeDialog: true,
+    inserimentoNomeUtente: null
+  }),
+  methods: {
+    login() {
+      Accesso.login(this.inserimentoNomeUtente);
+      this.$router.go(-1);
+    },
+    annulla(){
+        this.$router.go(-1);
+    }
+  }
+};
+</script>
+
+<style>
+</style>
