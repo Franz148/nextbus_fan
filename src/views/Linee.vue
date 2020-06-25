@@ -1,11 +1,11 @@
 <template>
   <div class="md-layout md-gutter md-alignment-center-center">
     <!-- <md-button class="md-primary md-raised" @click="ordinaLinee">Ordina</md-button>  -->
-
     <md-list class="md-double-line md-layout-item md-size-50">
       <div v-for="linea in linee" :key="linea.id.id">
         <md-list-item
-          :to="'/lineaSingola/' + linea.id.id + '?routeLongName='  + linea.routeLongName">
+          :to="'/lineaSingola/' + linea.id.id + '?routeLongName='  + linea.routeLongName"
+        >
           <md-avatar>
             <img :src="getImageFromId(linea.id.id)" />
           </md-avatar>
@@ -13,11 +13,21 @@
             <span>{{linea.routeLongName}}</span>
             <span>{{linea.routeShortName}}</span>
           </div>
-          <md-button class="md-icon-button" @click="addFavoriteLine(linea.id.id, linea.preferiti)">
-            <md-icon v-if="linea.preferiti==0">favorite_border</md-icon>
-            <md-icon v-if="linea.preferiti==1">favorite</md-icon>
+          <md-button
+            class="md-icon-button"
+            @click.stop.prevent="addFavoriteLine(linea.id.id, linea.preferiti)"
+            v-if="!linea.preferiti"
+          >
+            <md-icon>favorite_border</md-icon>
           </md-button>
-          
+
+          <md-button
+            class="md-icon-button md-primary"
+            @click.stop.prevent="addFavoriteLine(linea.id.id, linea.preferiti)"
+            v-if="linea.preferiti"
+          >
+            <md-icon>favorite</md-icon>
+          </md-button>
         </md-list-item>
         <md-divider></md-divider>
       </div>
@@ -40,11 +50,12 @@ export default {
         this.linee = results.data;
         this.addFavoriteField(this.linee);
         if (Accesso.isLoggedIn()) this.setFavorite(this.linee);
+
+        console.log(this.linee);
       })
       .catch(error => {
         console.error(error);
       });
-
   },
 
   methods: {
@@ -54,36 +65,37 @@ export default {
     addFavoriteField(linee) {
       linee.forEach(item => {
         item.preferiti = 0;
-
       });
     },
     setFavorite(linee) {
       let lineePreferite = [];
       DBFunction.getLineePreferite().then(results => {
         lineePreferite = results;
-        console.log(linee);
-        console.log(lineePreferite);
-        for (let i = 0; i < linee.length; i++ ){
-          for (let i2 = 0; i2 < lineePreferite.length; i++ ){
-              if(linee[i].id.id == lineePreferite[i2].idLinea){
-                linee[i].preferiti=1;
-              }
-
+        //console.log(linee);
+        //console.log(lineePreferite);
+        for (let i = 0; i < linee.length; i++) {
+          for (let i2 = 0; i2 < lineePreferite.length; i2++) {
+            if (linee[i].id.id == lineePreferite[i2].idLinea) {
+              linee[i].preferiti = 1;
+            }
           }
-         
         }
-
       });
     },
-    addFavoriteLine(id,preferiti){
-      if (!Accesso.isLoggedIn()) 
-        this.$router.push("/accesso");
+    addFavoriteLine(id, preferiti) {
+      if (!Accesso.isLoggedIn()) this.$router.push("/accesso");
 
-      if (preferiti==0){
-        DBFunction.setLineaPreferita(id);
-        this.$router.go();
-      };
-    
+      if (preferiti == 0) {
+        DBFunction.setLineaPreferita(id).then(() => {
+          this.$router.go();
+        });
+      }
+    },
+
+    getPreferiti(valore) {
+      console.log(valore);
+      if (valore == 1) return true;
+      else if (valore == 0) return false;
     }
   }
 

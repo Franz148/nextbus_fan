@@ -34,7 +34,7 @@
                 <span class="md-list-item-text">{{returnLineaSingola(linea.idLinea).routeLongName}}</span>
 
                 <md-button class="md-icon-button md-list-action">
-                  <md-icon class="md-accent">favorite</md-icon>
+                  <md-icon class="md-primary">favorite</md-icon>
                 </md-button>
               </md-list-item>
               <md-divider></md-divider>
