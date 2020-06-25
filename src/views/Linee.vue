@@ -12,7 +12,8 @@
             <span>{{linea.routeLongName}}</span>
             <span>{{linea.routeShortName}}</span>
           </div>
-          <md-icon>favorite_border</md-icon>
+         <md-button class="md-icon-button"> <md-icon >favorite_border</md-icon> </md-button> 
+         <!-- <md-button class="md-icon-button"> <md-icon >favorite</md-icon> </md-button>  -->
         </md-list-item>
         <md-divider></md-divider>
       </div>
