@@ -31,5 +31,16 @@ export default {
 
                 return arrayLinee;
             });
+    },
+    setLineaPreferita(idLinea) {
+        var user = Accesso.getUsername().toLowerCase();
+        return elementiPreferiti
+            .add({ 
+                idFermata:"-1",
+                idLinea: idLinea,
+                username:user
+            });
+
+
     }
 }

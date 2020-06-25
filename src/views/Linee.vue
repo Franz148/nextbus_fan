@@ -5,8 +5,7 @@
     <md-list class="md-double-line md-layout-item md-size-50">
       <div v-for="linea in linee" :key="linea.id.id">
         <md-list-item
-          :to="'/lineaSingola/' + linea.id.id + '?routeLongName='  + linea.routeLongName"
-        >
+          :to="'/lineaSingola/' + linea.id.id + '?routeLongName='  + linea.routeLongName">
           <md-avatar>
             <img :src="getImageFromId(linea.id.id)" />
           </md-avatar>
@@ -14,10 +13,11 @@
             <span>{{linea.routeLongName}}</span>
             <span>{{linea.routeShortName}}</span>
           </div>
-          <md-button class="md-icon-button" v-if="linea.preferiti==0">
-            <md-icon>favorite_border</md-icon>
+          <md-button class="md-icon-button" @click="addFavoriteLine(linea.id.id, linea.preferiti)">
+            <md-icon v-if="linea.preferiti==0">favorite_border</md-icon>
+            <md-icon v-if="linea.preferiti==1">favorite</md-icon>
           </md-button>
-          <md-button class="md-icon-button" v-if="linea.preferiti==1"> <md-icon >favorite</md-icon> </md-button> 
+          
         </md-list-item>
         <md-divider></md-divider>
       </div>
@@ -44,6 +44,7 @@ export default {
       .catch(error => {
         console.error(error);
       });
+
   },
 
   methods: {
@@ -73,6 +74,16 @@ export default {
         }
 
       });
+    },
+    addFavoriteLine(id,preferiti){
+      if (!Accesso.isLoggedIn()) 
+        this.$router.push("/accesso");
+
+      if (preferiti==0){
+        DBFunction.setLineaPreferita(id);
+        this.$router.go();
+      };
+    
     }
   }
 
