@@ -70,6 +70,7 @@
 import Accesso from "../login/access-functions.js";
 import Dbfunctions from "../database/db-functions.js";
 import Functions from "../api/functions.js";
+import axios from "axios/";
 
 export default {
   data: () => ({
@@ -88,21 +89,7 @@ export default {
     },
 
     returnLineaSingola(id) {
-      let i = 0;
-      let trovato = false;
-
-      let linea = [];
-
-      while (i < this.datiLinee.length || !trovato) {
-        if (id == this.datiLinee[i].id.id) {
-          trovato = true;
-          linea.push(this.datiLinee[i]);
-        }
-
-        i++;
-      }
-
-      return linea[0];
+      return this.datiLinee.find(linea => linea.id.id == id);
     },
 
     addFavoriteLine(id, preferiti, i) {
@@ -116,16 +103,19 @@ export default {
   },
 
   created: function() {
-    Dbfunctions.getLineePreferite().then(results => {
-      this.lineePreferite = results;
+
+    const getLinee = Functions.getLinee(12);
+    const getPreferiti = Dbfunctions.getLineePreferite();
+
+    axios.all([getLinee, getPreferiti])
+    .then(axios.spread((...responses) => {
+      this.datiLinee = responses[0].data;
+      this.lineePreferite = responses[1];
+
       this.activeSpinner = false;
 
       if (this.lineePreferite.length == 0) this.shownedEmptyState = true;
-    });
-
-    Functions.getLinee(12).then(results => {
-      this.datiLinee = results.data;
-    });
+    }));
   }
 };
 </script>
