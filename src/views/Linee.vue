@@ -45,17 +45,12 @@ export default {
     linee: []
   }),
   created: function() {
-    Functions.getLinee(12)
-      .then(results => {
-        this.linee = results.data;
-        this.addFavoriteField(this.linee);
-        if (Accesso.isLoggedIn()) this.setFavorite(this.linee);
-
-        console.log(this.linee);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    Functions.getLinee(12).then(results => {
+      this.linee = results.data;
+      this.addFavoriteField(this.linee);
+      if (Accesso.isLoggedIn()) this.setFavorite(this.linee);
+      console.log(this.linee);
+    });
   },
 
   methods: {
@@ -64,19 +59,17 @@ export default {
     },
     addFavoriteField(linee) {
       linee.forEach(item => {
-        item.preferiti = 0;
+        this.$set(item, "preferiti", 0);
       });
     },
     setFavorite(linee) {
       let lineePreferite = [];
       DBFunction.getLineePreferite().then(results => {
         lineePreferite = results;
-        //console.log(linee);
-        //console.log(lineePreferite);
         for (let i = 0; i < linee.length; i++) {
           for (let i2 = 0; i2 < lineePreferite.length; i2++) {
             if (linee[i].id.id == lineePreferite[i2].idLinea) {
-              linee[i].preferiti = 1;
+              this.$set(linee[i], "preferiti", 1);
             }
           }
         }
@@ -89,13 +82,13 @@ export default {
         DBFunction.setLineaPreferita(id).then(() => {
           this.$router.go();
         });
-      }
-    },
 
-    getPreferiti(valore) {
-      console.log(valore);
-      if (valore == 1) return true;
-      else if (valore == 0) return false;
+      }
+      else if (preferiti == 1) {
+        DBFunction.rimuoviLineaPreferita(id).then(() => {
+          this.$router.go();
+        });
+      }
     }
   }
 

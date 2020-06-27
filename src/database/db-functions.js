@@ -43,5 +43,19 @@ export default {
             });
 
 
+    },
+    rimuoviLineaPreferita(idLinea) {
+        var user = Accesso.getUsername().toLowerCase();
+        return elementiPreferiti
+            .where("idLinea", "==", idLinea)
+            .where("username", "==", user)
+            .get()
+            .then(results => {
+                results.forEach(doc => {
+                    return elementiPreferiti.doc(doc.id).delete();
+                });
+            });
+
+
     }
 }
