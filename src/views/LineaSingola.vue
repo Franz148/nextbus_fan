@@ -80,7 +80,7 @@ export default {
     idRoutes: null,
     viaggi: [],
     current: 0,
-    isButtonPrecedenteDisabled: false,
+    isButtonPrecedenteDisabled: true,
     isButtonSuccessivoDisabled: false,
     orariNonDisponibili: false
   }),
@@ -212,35 +212,29 @@ export default {
         } */
       }
     },
-    //DA CORREGGERE CHE IL PRIMO E L'ULTIMO POSSO CLICCARLI 2 VOLTE
     precedente() {
-      this.isButtonSuccessivoDisabled = false;
+      this.current -= 1;
       if (this.current <= 0) {
-        //precedente disabilitato
+        this.current = 0;
         this.isButtonPrecedenteDisabled = true;
       } else {
-        //controllo i bottoni da disabilitare
-        console.log("precedente");
-        this.current -= 1;
-        console.log(this.current);
-        this.orari = this.viaggi[this.current].stopTimes;
-        //this.isButtonPrecedenteDisabled=false;
+        this.isButtonSuccessivoDisabled = false;
       }
+      this.orari = this.viaggi[this.current].stopTimes;
+      console.log("precedente");
+      console.log(this.current);
     },
     successivo() {
-      this.isButtonPrecedenteDisabled = false;
-
+      this.current += 1;
       if (this.current >= this.viaggi.length - 1) {
-        //successivo disabilitato
+        this.current = this.viaggi.length - 1;
         this.isButtonSuccessivoDisabled = true;
       } else {
-        //controllo i bottoni da disabilitare
-        console.log("successivo");
-        this.current += 1;
-        console.log(this.current);
-        this.orari = this.viaggi[this.current].stopTimes;
-        //this.isButtonSuccessivoDisabled=false;
+        this.isButtonPrecedenteDisabled = false;
       }
+      this.orari = this.viaggi[this.current].stopTimes;
+      console.log("successivo");
+      console.log(this.current);
     }
   }
 };
