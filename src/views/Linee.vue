@@ -2,7 +2,7 @@
   <div class="md-layout md-gutter md-alignment-center-center">
     <!-- <md-button class="md-primary md-raised" @click="ordinaLinee">Ordina</md-button>  -->
     <md-list class="md-double-line md-layout-item md-size-50">
-      <div v-for="linea in linee" :key="linea.id.id">
+      <div v-for="(linea, i) in linee" :key="linea.id.id">
         <md-list-item
           :to="'/lineaSingola/' + linea.id.id + '?routeLongName='  + linea.routeLongName"
         >
@@ -15,7 +15,7 @@
           </div>
           <md-button
             class="md-icon-button"
-            @click.stop.prevent="addFavoriteLine(linea.id.id, linea.preferiti)"
+            @click.stop.prevent="addFavoriteLine(linea.id.id, linea.preferiti,i)"
             v-if="!linea.preferiti"
           >
             <md-icon>favorite_border</md-icon>
@@ -23,7 +23,7 @@
 
           <md-button
             class="md-icon-button md-primary"
-            @click.stop.prevent="addFavoriteLine(linea.id.id, linea.preferiti)"
+            @click.stop.prevent="addFavoriteLine(linea.id.id, linea.preferiti,i)"
             v-if="linea.preferiti"
           >
             <md-icon>favorite</md-icon>
@@ -75,18 +75,18 @@ export default {
         }
       });
     },
-    addFavoriteLine(id, preferiti) {
+    addFavoriteLine(id, preferiti, i ) {
       if (!Accesso.isLoggedIn()) this.$router.push("/accesso");
 
       if (preferiti == 0) {
         DBFunction.setLineaPreferita(id).then(() => {
-          this.$router.go();
+          this.$set(this.linee[i], "preferiti", 1);
         });
 
       }
       else if (preferiti == 1) {
         DBFunction.rimuoviLineaPreferita(id).then(() => {
-          this.$router.go();
+          this.$set(this.linee[i], "preferiti", 0);
         });
       }
     }
