@@ -1,10 +1,15 @@
 <template>
   <div class="md-layout md-gutter md-alignment-center-center">
+    <div class="md-layout-item md-size-80 md-layout md-alignment-center-center">
+      <label>Andata</label>
+      <md-switch v-model="valoreSwitch">Ritorno</md-switch>
+    </div>
     <!-- <md-button class="md-primary md-raised" @click="ordinaLinee">Ordina</md-button>  -->
     <md-list class="md-double-line md-layout-item md-size-50">
       <div v-for="(linea, i) in linee" :key="linea.id.id">
         <md-list-item
           :to="'/lineaSingola/' + linea.id.id + '?routeLongName='  + linea.routeLongName"
+          v-bind:class="sceltaAR(linea.id.id)"
         >
           <md-avatar>
             <img :src="getImageFromId(linea.id.id)" />
@@ -42,7 +47,8 @@ import Accesso from "../login/access-functions.js";
 
 export default {
   data: () => ({
-    linee: []
+    linee: [],
+    valoreSwitch: false
   }),
   created: function() {
     Functions.getLinee(12).then(results => {
@@ -75,20 +81,32 @@ export default {
         }
       });
     },
-    addFavoriteLine(id, preferiti, i ) {
+    addFavoriteLine(id, preferiti, i) {
       if (!Accesso.isLoggedIn()) this.$router.push("/accesso");
 
       if (preferiti == 0) {
         DBFunction.setLineaPreferita(id).then(() => {
           this.$set(this.linee[i], "preferiti", 1);
         });
-
-      }
-      else if (preferiti == 1) {
+      } else if (preferiti == 1) {
         DBFunction.rimuoviLineaPreferita(id).then(() => {
           this.$set(this.linee[i], "preferiti", 0);
         });
       }
+    },
+    sceltaAR(id) {
+      let classi = [];
+      if (this.valoreSwitch) {
+        if (id.indexOf("A") != -1 || id == "02") {
+          classi.push("md-hide");
+        }
+      } else {
+        if (id.indexOf("R") != -1) {
+          classi.push("md-hide");
+        }
+      }
+
+      return classi;
     }
   }
 
@@ -111,4 +129,7 @@ export default {
 </script>
 
 <style>
+.md-switch {
+  display: flex;
+}
 </style>
