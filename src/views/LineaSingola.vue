@@ -21,6 +21,19 @@
               v-on:click="precedente"
             >Precedente</md-button>
           </div>
+          <!--  SELECT -->
+          <div class="md-layout-item">
+            <md-field>
+              <md-select v-model="selezionato" :key="componentKey">
+                <md-option
+                  v-for="(item,index) in orariPartenzaLinea"
+                  v-bind:key="index"
+                  :value="index"
+                >{{item}}</md-option>
+              </md-select>
+            </md-field>
+          </div>
+          <!--  -->
           <div>
             <md-button v-bind:disabled="isButtonSuccessivoDisabled" @click="successivo">Successivo</md-button>
           </div>
@@ -82,7 +95,10 @@ export default {
     current: 0,
     isButtonPrecedenteDisabled: true,
     isButtonSuccessivoDisabled: false,
-    orariNonDisponibili: false
+    orariNonDisponibili: false,
+    orariPartenzaLinea: [],
+    selezionato: 0, //valore che deve mostrare all'inizio
+    componentKey: 0
   }),
 
   beforeCreate: function() {
@@ -130,26 +146,22 @@ export default {
       .then(results => {
         this.idFermate = results.data.stopIds;
         this.nomeFermate = results.data.stopNames;
-        /* console.log(
-          "id fermate:" +
-            this.idFermate.length +
-            " nome fermate:" +
-            this.nomeFermate.length
-        ); */
 
         //la posizione di results.data.trips è l'array di trips
-
         console.log(results.data.trips.length);
         this.viaggi = results.data.trips;
         console.log(this.viaggi);
         //all'avvio carico di default gli orari del primo viaggio
         this.orari = this.viaggi[0].stopTimes;
         //console.log(this.orari);
+        this.caricoArraySelect(this.viaggi);
       })
       .catch(error => {
         console.error(error);
         // orari non disponibili perchè l'array è vuoto
         this.orariNonDisponibili = true;
+        this.isButtonSuccessivoDisabled=true;
+        this.isButtonPrecedenteDisabled=true;
       });
 
     Functions.getLineaSingolaAccessibilita(this.idAgency, this.idRoutes)
@@ -196,10 +208,20 @@ export default {
       }
       return require("../assets/iconeLinee/" + id + ".png");
     },
-    /* ritornaAccessibile(accessibile)
-    {
-      return accessibile.wheelChairBoarding;
-    } */
+
+    caricoArraySelect(viaggi) {
+      //carico array orari primi nella lista di ogni trip
+      let j = 0;
+      for (let i = 0; i < viaggi.length; i++) {
+        while (viaggi[i].stopTimes[j] == "") {
+          j++;
+        }
+        this.orariPartenzaLinea.push(viaggi[i].stopTimes[j]);
+        j = 0;
+      }
+      console.log(this.orariPartenzaLinea);
+      /* this.selezionato=this.orariPartenzaLinea[0]; */
+    },
 
     ritornaAccessibile(accessibilita, n) {
       for (let i = 0; i < accessibilita.length; i++) {
@@ -221,6 +243,7 @@ export default {
         this.isButtonSuccessivoDisabled = false;
       }
       this.orari = this.viaggi[this.current].stopTimes;
+      this.selezionato = this.current;
       console.log("precedente");
       console.log(this.current);
     },
@@ -233,8 +256,24 @@ export default {
         this.isButtonPrecedenteDisabled = false;
       }
       this.orari = this.viaggi[this.current].stopTimes;
+      this.selezionato = this.current;
       console.log("successivo");
       console.log(this.current);
+    }
+  },
+  watch: {
+    selezionato: function() {
+      console.log("selezionato " + this.selezionato);
+      this.current = this.selezionato;
+      this.orari = this.viaggi[this.current].stopTimes;
+      if (this.current == 0) {
+        this.isButtonPrecedenteDisabled = true;
+        this.isButtonSuccessivoDisabled = false;
+      }
+      if (this.current == this.viaggi.length - 1) {
+        this.isButtonSuccessivoDisabled = true;
+        this.isButtonPrecedenteDisabled = false;
+      }
     }
   }
 };
