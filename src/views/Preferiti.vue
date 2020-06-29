@@ -13,7 +13,6 @@
       <md-card
         class="md-layout-item md-xsmall-size-90 md-small-size-80 md-size-60"
         v-if="checkAutenticazione()"
-        md-with-hover
       >
         <md-card-header>
           <md-card-header-text>
