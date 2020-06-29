@@ -11,25 +11,25 @@
           <div class="md-layout-item md-size-75">
             <div class="md-title">{{$route.query.routeLongName}}</div>
           </div>
-          <!--  -->
+          <!-- -->
           <div class="md-layout-item md-size-10">
             <md-button
               class="md-icon-button"
-              @click.stop.prevent="addFavoriteLine(linea.id.id, linea.preferiti,i)"
-              v-if="!linea.preferiti"
+              @click.stop.prevent="addFavoriteLine(idRoutes, preferito)"
+              v-if="!preferito"
             >
               <md-icon>favorite_border</md-icon>
             </md-button>
 
             <md-button
               class="md-icon-button md-primary"
-              @click.stop.prevent="addFavoriteLine(linea.id.id, linea.preferiti,i)"
-              v-if="linea.preferiti"
+              @click.stop.prevent="addFavoriteLine(idRoutes, preferito)"
+              v-if="preferito"
             >
               <md-icon>favorite</md-icon>
             </md-button>
           </div>
-          <!--  -->
+          <!-- -->
         </div>
       </md-card-header>
       <md-card-expand>
@@ -121,7 +121,8 @@ export default {
     orariNonDisponibili: false,
     orariPartenzaLinea: [],
     selezionato: 0, //valore che deve mostrare all'inizio
-    linee: [] //
+    linee: [], //
+    preferito: false
   }),
 
   created: function() {
@@ -167,16 +168,16 @@ export default {
       console.log(this.linee);
     });
       */
-     DBFunction.getLineaSingolaPreferita(this.idRoutes)
-    
-      .then(results3=>{
-        console.log(results3);
-      })
-      .catch(error=>{
-        console.error(error);
-      })
 
-    
+    if (Accesso.isLoggedIn()) {
+      DBFunction.getLineaSingolaPreferita(this.idRoutes)
+        .then(results3 => {
+          if (results3.length != 0) this.preferito = true;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
 
     Functions.getLineaSingolaConOrario(this.idAgency, this.idRoutes)
       .then(results => {
@@ -281,33 +282,15 @@ export default {
       this.selezionato = this.current;
     },
     /*  */
-    addFavoriteField(linee) {
-      linee.forEach(item => {
-        this.$set(item, "preferiti", 0);
-      });
-    },
-    setFavorite(linee) {
-      let lineePreferite = [];
-      DBFunction.getLineePreferite().then(results => {
-        lineePreferite = results;
-        for (let i = 0; i < linee.length; i++) {
-          for (let i2 = 0; i2 < lineePreferite.length; i2++) {
-            if (linee[i].id.id == lineePreferite[i2].idLinea) {
-              this.$set(linee[i], "preferiti", 1);
-            }
-          }
-        }
-      });
-    },
-    addFavoriteLine(id, preferiti, i) {
+    addFavoriteLine(id, preferiti) {
       if (!Accesso.isLoggedIn()) this.$router.push("/accesso");
-      if (preferiti == 0) {
+      if (preferiti == false) {
         DBFunction.setLineaPreferita(id).then(() => {
-          this.$set(this.linee[i], "preferiti", 1);
+          this.preferito = true;
         });
-      } else if (preferiti == 1) {
+      } else if (preferiti == true) {
         DBFunction.rimuoviLineaPreferita(id).then(() => {
-          this.$set(this.linee[i], "preferiti", 0);
+          this.preferito = false;
         });
       }
     }
