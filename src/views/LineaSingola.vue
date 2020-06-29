@@ -8,9 +8,28 @@
               <img :src="getImageFromId(idRoutes)" />
             </md-avatar>
           </div>
-          <div class="md-layout-item md-size-85">
+          <div class="md-layout-item md-size-75">
             <div class="md-title">{{$route.query.routeLongName}}</div>
           </div>
+          <!--  -->
+          <div class="md-layout-item md-size-10">
+            <md-button
+              class="md-icon-button"
+              @click.stop.prevent="addFavoriteLine(linea.id.id, linea.preferiti,i)"
+              v-if="!linea.preferiti"
+            >
+              <md-icon>favorite_border</md-icon>
+            </md-button>
+
+            <md-button
+              class="md-icon-button md-primary"
+              @click.stop.prevent="addFavoriteLine(linea.id.id, linea.preferiti,i)"
+              v-if="linea.preferiti"
+            >
+              <md-icon>favorite</md-icon>
+            </md-button>
+          </div>
+          <!--  -->
         </div>
       </md-card-header>
       <md-card-expand>
@@ -82,6 +101,10 @@
 
 <script>
 import Functions from "../api/functions.js";
+/*  */
+import DBFunction from "../database/db-functions.js";
+import Accesso from "../login/access-functions.js";
+/*  */
 export default {
   data: () => ({
     idFermate: [],
@@ -97,7 +120,8 @@ export default {
     isButtonSuccessivoDisabled: false,
     orariNonDisponibili: false,
     orariPartenzaLinea: [],
-    selezionato: 0 //valore che deve mostrare all'inizio
+    selezionato: 0, //valore che deve mostrare all'inizio
+    linee: [] //
   }),
 
   created: function() {
@@ -135,6 +159,25 @@ export default {
         this.idRoutes = this.$route.params.id;
     }
 
+    /*  
+    Functions.getLinee(12).then(results => {
+      this.linee = results.data;
+      this.addFavoriteField(this.linee);
+      if (Accesso.isLoggedIn()) this.setFavorite(this.linee);
+      console.log(this.linee);
+    });
+      */
+     DBFunction.getLineaSingolaPreferita(this.idRoutes)
+    
+      .then(results3=>{
+        console.log(results3);
+      })
+      .catch(error=>{
+        console.error(error);
+      })
+
+    
+
     Functions.getLineaSingolaConOrario(this.idAgency, this.idRoutes)
       .then(results => {
         this.idFermate = results.data.stopIds;
@@ -150,8 +193,8 @@ export default {
         console.error(error);
         // orari non disponibili perchè l'array è vuoto
         this.orariNonDisponibili = true;
-        this.isButtonSuccessivoDisabled=true;
-        this.isButtonPrecedenteDisabled=true;
+        this.isButtonSuccessivoDisabled = true;
+        this.isButtonPrecedenteDisabled = true;
       });
 
     Functions.getLineaSingolaAccessibilita(this.idAgency, this.idRoutes)
@@ -212,7 +255,7 @@ export default {
       for (let i = 0; i < accessibilita.length; i++) {
         if (this.idFermate[n] == accessibilita[i].id) {
           return accessibilita[i].wheelChairBoarding;
-        } 
+        }
       }
     },
     precedente() {
@@ -236,7 +279,39 @@ export default {
       }
       this.orari = this.viaggi[this.current].stopTimes;
       this.selezionato = this.current;
+    },
+    /*  */
+    addFavoriteField(linee) {
+      linee.forEach(item => {
+        this.$set(item, "preferiti", 0);
+      });
+    },
+    setFavorite(linee) {
+      let lineePreferite = [];
+      DBFunction.getLineePreferite().then(results => {
+        lineePreferite = results;
+        for (let i = 0; i < linee.length; i++) {
+          for (let i2 = 0; i2 < lineePreferite.length; i2++) {
+            if (linee[i].id.id == lineePreferite[i2].idLinea) {
+              this.$set(linee[i], "preferiti", 1);
+            }
+          }
+        }
+      });
+    },
+    addFavoriteLine(id, preferiti, i) {
+      if (!Accesso.isLoggedIn()) this.$router.push("/accesso");
+      if (preferiti == 0) {
+        DBFunction.setLineaPreferita(id).then(() => {
+          this.$set(this.linee[i], "preferiti", 1);
+        });
+      } else if (preferiti == 1) {
+        DBFunction.rimuoviLineaPreferita(id).then(() => {
+          this.$set(this.linee[i], "preferiti", 0);
+        });
+      }
     }
+    /*  */
   },
   watch: {
     selezionato: function() {
