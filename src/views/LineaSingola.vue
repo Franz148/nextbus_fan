@@ -22,9 +22,9 @@
             >Precedente</md-button>
           </div>
           <!--  SELECT -->
-          <div class="md-layout-item">
+          <div class="md-layout-item md-size-50">
             <md-field>
-              <md-select v-model="selezionato" :key="componentKey">
+              <md-select v-model="selezionato">
                 <md-option
                   v-for="(item,index) in orariPartenzaLinea"
                   v-bind:key="index"
@@ -97,17 +97,10 @@ export default {
     isButtonSuccessivoDisabled: false,
     orariNonDisponibili: false,
     orariPartenzaLinea: [],
-    selezionato: 0, //valore che deve mostrare all'inizio
-    componentKey: 0
+    selezionato: 0 //valore che deve mostrare all'inizio
   }),
 
-  beforeCreate: function() {
-    console.log(this.$route.params.id);
-    //console.log(this.$route.query.routeLongName);
-    //this.orari=this.viaggi[0].stopTimes;
-  },
   created: function() {
-    //this.idRoutes = this.$route.params.id;
     //SOSTITUISCO GLI ID INESISTENTI PASSATI DA LINEE
     switch (this.$route.params.id) {
       case "1A":
@@ -146,11 +139,8 @@ export default {
       .then(results => {
         this.idFermate = results.data.stopIds;
         this.nomeFermate = results.data.stopNames;
-
         //la posizione di results.data.trips è l'array di trips
-        console.log(results.data.trips.length);
         this.viaggi = results.data.trips;
-        console.log(this.viaggi);
         //all'avvio carico di default gli orari del primo viaggio
         this.orari = this.viaggi[0].stopTimes;
         //console.log(this.orari);
@@ -167,11 +157,8 @@ export default {
     Functions.getLineaSingolaAccessibilita(this.idAgency, this.idRoutes)
       .then(results2 => {
         this.accessibilita = results2.data;
-        /* console.log("accessibilità" + " " + this.accessibilita.length);
-        console.log(this.accessibilita); */
       })
       .catch(error => {
-        console.log("accessibilità" + " " + this.accessibilita.length);
         console.error(error);
       });
   },
@@ -210,7 +197,7 @@ export default {
     },
 
     caricoArraySelect(viaggi) {
-      //carico array orari primi nella lista di ogni trip
+      //carico array degli orari primi nella lista di ogni trip
       let j = 0;
       for (let i = 0; i < viaggi.length; i++) {
         while (viaggi[i].stopTimes[j] == "") {
@@ -219,19 +206,13 @@ export default {
         this.orariPartenzaLinea.push(viaggi[i].stopTimes[j]);
         j = 0;
       }
-      console.log(this.orariPartenzaLinea);
-      /* this.selezionato=this.orariPartenzaLinea[0]; */
     },
 
     ritornaAccessibile(accessibilita, n) {
       for (let i = 0; i < accessibilita.length; i++) {
         if (this.idFermate[n] == accessibilita[i].id) {
           return accessibilita[i].wheelChairBoarding;
-        } /* else {
-          //dati per quella fermata non trovati
-          //return 0;
-          console.log("non va");
-        } */
+        } 
       }
     },
     precedente() {
@@ -244,8 +225,6 @@ export default {
       }
       this.orari = this.viaggi[this.current].stopTimes;
       this.selezionato = this.current;
-      console.log("precedente");
-      console.log(this.current);
     },
     successivo() {
       this.current += 1;
@@ -257,13 +236,10 @@ export default {
       }
       this.orari = this.viaggi[this.current].stopTimes;
       this.selezionato = this.current;
-      console.log("successivo");
-      console.log(this.current);
     }
   },
   watch: {
     selezionato: function() {
-      console.log("selezionato " + this.selezionato);
       this.current = this.selezionato;
       this.orari = this.viaggi[this.current].stopTimes;
       if (this.current == 0) {
