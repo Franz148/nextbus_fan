@@ -4,7 +4,7 @@
     <md-dialog-prompt
       :md-active.sync="activeDialog"
       v-model="inserimentoNomeUtente"
-      md-title="Come ti chiami?"
+      md-title="Effettua l'accesso"
       md-input-maxlength="15"
       md-input-placeholder="Inserisci il tuo nome..."
       md-confirm-text="Inserisci"
