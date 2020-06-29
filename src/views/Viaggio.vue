@@ -57,7 +57,7 @@
 
 <script>
 import Functions from "../api/functions.js";
-import Lodash from "lodas"
+//import Lodash from "lodas"
 
 export default {
   data: () => ({
@@ -135,7 +135,8 @@ export default {
   },
 
   beforeRouteUpdate(to, from, next){
-    console.log(isEqual(from.query, to.query));
+    console.log(from);
+    console.log(to);
     console.log(next);
   }
 };
