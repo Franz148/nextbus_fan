@@ -7,7 +7,7 @@
     </div>
 
     <!-- Lista delle linee, che selezionando passa a linea singola l'id della linea e il long name -->
-    <md-list class="md-double-line md-layout-item md-size-50">
+    <md-list class="md-double-line md-layout-item md-size-60 md-xsmall-size-100">
       <div v-for="(linea, i) in linee" :key="linea.id.id" v-bind:class="sceltaAR(linea.id.id)">
         <md-list-item
           :to="'/lineaSingola/' + linea.id.id + '?routeLongName='  + linea.routeLongName"
@@ -58,12 +58,12 @@ export default {
   created: function() {
     Functions.getLinee(12).then(results => {
       this.linee = results.data;
+      this.ordinaLinee();
       this.addFavoriteField(this.linee);
       //si può aggiungere una linea nei preferiti solo se è stato fatto l'accesso
       if (Accesso.isLoggedIn()) this.setFavorite(this.linee);
       console.log(this.linee);
     });
-    this.ordinaLinee();
   },
 
   methods: {
@@ -120,24 +120,33 @@ export default {
       }
 
       return classi;
-    }
-  },
-  ordinaLinee() {
-    console.log(this.linee);
-    let confronta = (a, b) => {
-      const nameRouteA = a.routeShortName.toUpperCase();
-      const nameRouteB = b.routeShortName.toUpperCase();
+    },
+    ordinaLinee() {
+      console.log(this.linee);
+      let confronta = (a, b) => {
+        let tmpB =b.id.id.toUpperCase();
 
-      let comparison = 0;
-      if (nameRouteA > nameRouteB) {
-        comparison = 1;
-      } else if (nameRouteA < nameRouteB) {
-        comparison = -1;
-      }
-      return comparison;
-    };
-    this.linee.sort(confronta);
-    console.log(this.linee);
+        if (b.id.id == "1A" ) {
+          tmpB = "01A";
+        }
+        else if (b.id.id == "1R") {
+          tmpB = "01R";
+        }
+
+        const nameRouteA = a.id.id.toUpperCase();
+        const nameRouteB = tmpB;
+
+        let comparison = 0;
+        if (nameRouteA > nameRouteB) {
+          comparison = 1;
+        } else if (nameRouteA < nameRouteB) {
+          comparison = -1;
+        }
+        return comparison;
+      };
+      this.linee.sort(confronta);
+      console.log(this.linee);
+    }
   }
 };
 </script>
