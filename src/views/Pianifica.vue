@@ -155,7 +155,7 @@ export default {
       this.$router.push("/pianifica");
     },
     submit() {
-      this.$v.$touch();
+      //this.$v.$touch();
 
       if (!this.$v.$invalid) {
         let queryParams = {
@@ -167,7 +167,7 @@ export default {
 
         this.sending = true;
 
-        this.$router.push({ path: "/pianifica/viaggio", query: queryParams });
+        this.$router.push({ path: "/pianifica/viaggio", query: Object.assign({}, this.$route.query, queryParams) });
       }
     }
   }
