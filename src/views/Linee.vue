@@ -121,6 +121,8 @@ export default {
 
       return classi;
     },
+    //funzione che ordina in ordine alfabetico dell'id le linee
+    //creo variabile temporanea per cambio id di 1 con 01 così è il primo della lista
     ordinaLinee() {
       console.log(this.linee);
       let confronta = (a, b) => {
