@@ -16,7 +16,7 @@
             </span>
           </div>
           <div class="md-toolbar-section-end">
-            <md-button class="md-icon-button" v-if="!checkAutenticazione()" to="/accesso">
+            <md-button class="md-icon-button" v-if="!checkAutenticazione()" @click="login()">
               <md-icon>account_circle</md-icon>
             </md-button>
             <md-button class="md-icon-button" v-if="checkAutenticazione()" @click="logout()">
@@ -72,6 +72,9 @@ export default {
   methods: {
     checkAutenticazione() {
       return Accesso.isLoggedIn();
+    },
+    login(){
+      this.$router.push("/accesso");
     },
     logout() {
       Accesso.logout();
