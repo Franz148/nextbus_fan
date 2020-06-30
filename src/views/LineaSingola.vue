@@ -1,6 +1,6 @@
 <template>
-  <div class="md-layout md-gutter md-alignment-center-center">
-    <md-card class="md-layout-item md-size-50">
+  <div class="md-layout md-alignment-center-center">
+    <md-card class="md-layout-item md-size-50 md-small-size-80 md-xsmall-size-100">
       <md-card-header>
         <div class="md-layout md-gutter">
           <div class="md-layout-item md-size-15">
@@ -11,7 +11,7 @@
           <div class="md-layout-item md-size-75">
             <div class="md-title">{{$route.query.routeLongName}}</div>
           </div>
-          <!-- -->
+          
           <div class="md-layout-item md-size-10">
             <md-button
               class="md-icon-button"
@@ -29,10 +29,10 @@
               <md-icon>favorite</md-icon>
             </md-button>
           </div>
-          <!-- -->
         </div>
       </md-card-header>
-      <md-card-expand>
+      <!--  -->
+      <md-card-expand v-show="mostra">
         <md-card-actions md-alignment="space-between">
           <div>
             <md-button
@@ -43,6 +43,9 @@
           <!--  SELECT -->
           <div class="md-layout-item md-size-50">
             <md-field>
+              <!--  -->
+              <label>Partenza alle</label>
+              <!--  -->
               <md-select v-model="selezionato">
                 <md-option
                   v-for="(item,index) in orariPartenzaLinea"
@@ -62,14 +65,19 @@
 
     <!--AVVISO ORARI NON DISPONIBILI-->
     <div class="md-layout-item md-size-100" v-show="orariNonDisponibili">
-      <span>Orari non disponibili</span>
+      <md-empty-state
+      class="md-accent"
+      md-icon="search_off"
+      md-label="Orari non disponibili"
+      md-description="Oggi non passa nessun autobus su questa linea.">
+    </md-empty-state>
     </div>
 
-    <md-list class="md-layout-item md-size-50">
-      <div v-for="(id,n) in idFermate" :key="idFermate[n]">
+    <md-list class="md-layout-item md-size-50 md-small-size-80 md-xsmall-size-100">
+      <div v-for="(id,n) in idFermate" :key="n">
         <!--FERMATA DOVE PASSA IL BUS-->
         <!--passa se orari[n] != '' -->
-        <template v-if="orari[n] !=''">
+        <div v-if="orari[n] !=''">
           <md-list-item>
             <md-icon class="md-primary">directions_bus</md-icon>
             <div class="md-list-item-text">
@@ -79,20 +87,18 @@
             <!-- 0=non accessibile, 1 accessibile,2 non si hanno informazioni-->
             <md-icon class="md-primary" v-if="ritornaAccessibile(accessibilita,n) ==1">accessible</md-icon>
           </md-list-item>
-        </template>
+        </div>
 
         <!--FERMATA DOVE NON PASSA IL BUS-->
-        <template v-else>
+        <div v-else>
           <md-list-item>
             <md-icon>directions_bus</md-icon>
             <div class="md-list-item-text">
               <span>{{nomeFermate[n]}}</span>
-              <!-- <span>{{ritornaAccessibile(accessibilita,n)}}</span> -->
             </div>
             <md-icon v-if="ritornaAccessibile(accessibilita,n) ==1">accessible</md-icon>
-            <!-- <md-icon v-if="ritornaAccessibile(accessibilita[n]) != 0">accessible</md-icon> -->
           </md-list-item>
-        </template>
+        </div>
         <md-divider></md-divider>
       </div>
     </md-list>
@@ -120,9 +126,9 @@ export default {
     isButtonSuccessivoDisabled: false,
     orariNonDisponibili: false,
     orariPartenzaLinea: [],
-    selezionato: 0, //valore che deve mostrare all'inizio
-    linee: [], //
-    preferito: false
+    selezionato: 0, //all'inizio mostro la prima trip
+    preferito: false,
+    mostra:true
   }),
 
   created: function() {
@@ -132,7 +138,7 @@ export default {
         this.idRoutes = "01A";
         break;
       case "1R":
-        this.idRoutes = "01R"; //{"stopIds":null,"stopNames":null,"trips":[]}
+        this.idRoutes = "01R"; 
         break;
       case "02":
         this.idRoutes = "02C";
@@ -160,15 +166,6 @@ export default {
         this.idRoutes = this.$route.params.id;
     }
 
-    /*  
-    Functions.getLinee(12).then(results => {
-      this.linee = results.data;
-      this.addFavoriteField(this.linee);
-      if (Accesso.isLoggedIn()) this.setFavorite(this.linee);
-      console.log(this.linee);
-    });
-      */
-
     if (Accesso.isLoggedIn()) {
       DBFunction.getLineaSingolaPreferita(this.idRoutes)
         .then(results3 => {
@@ -194,8 +191,9 @@ export default {
         console.error(error);
         // orari non disponibili perchè l'array è vuoto
         this.orariNonDisponibili = true;
-        this.isButtonSuccessivoDisabled = true;
-        this.isButtonPrecedenteDisabled = true;
+        this.mostra=false;
+        //this.isButtonSuccessivoDisabled = true;
+        //this.isButtonPrecedenteDisabled = true;
       });
 
     Functions.getLineaSingolaAccessibilita(this.idAgency, this.idRoutes)
@@ -241,7 +239,7 @@ export default {
     },
 
     caricoArraySelect(viaggi) {
-      //carico array degli orari primi nella lista di ogni trip
+      //carico array degli orari primi nella lista di ogni trip per metterli nel select
       let j = 0;
       for (let i = 0; i < viaggi.length; i++) {
         while (viaggi[i].stopTimes[j] == "") {
@@ -253,13 +251,16 @@ export default {
     },
 
     ritornaAccessibile(accessibilita, n) {
+      //ritorna il valore di .wheelChairBoarding dello stesso id della fermata
       for (let i = 0; i < accessibilita.length; i++) {
         if (this.idFermate[n] == accessibilita[i].id) {
           return accessibilita[i].wheelChairBoarding;
         }
       }
     },
+
     precedente() {
+      //visualizza la trip precedente
       this.current -= 1;
       if (this.current <= 0) {
         this.current = 0;
@@ -270,7 +271,9 @@ export default {
       this.orari = this.viaggi[this.current].stopTimes;
       this.selezionato = this.current;
     },
+
     successivo() {
+      //visualizza la trip successiva
       this.current += 1;
       if (this.current >= this.viaggi.length - 1) {
         this.current = this.viaggi.length - 1;
@@ -281,8 +284,9 @@ export default {
       this.orari = this.viaggi[this.current].stopTimes;
       this.selezionato = this.current;
     },
-    /*  */
+
     addFavoriteLine(id, preferiti) {
+      //aggiunge ai preferiti la linea visualizzata
       if (!Accesso.isLoggedIn()) this.$router.push("/accesso");
       if (preferiti == false) {
         DBFunction.setLineaPreferita(id).then(() => {
@@ -294,10 +298,11 @@ export default {
         });
       }
     }
-    /*  */
   },
+
   watch: {
     selezionato: function() {
+      //controllo il cambiamento della trip selezionata
       this.current = this.selezionato;
       this.orari = this.viaggi[this.current].stopTimes;
       if (this.current == 0) {

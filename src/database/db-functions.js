@@ -41,8 +41,6 @@ export default {
                 idLinea: idLinea,
                 username: user
             });
-
-
     },
     rimuoviLineaPreferita(idLinea) {
         var user = Accesso.getUsername().toLowerCase();
@@ -55,10 +53,8 @@ export default {
                     return elementiPreferiti.doc(doc.id).delete();
                 });
             });
-
-
     },
-    getLineaSingolaPreferita(idLinea){
+    getLineaSingolaPreferita(idLinea) {
         var user = Accesso.getUsername().toLowerCase();
         var arrayLinee = [];
         return elementiPreferiti
