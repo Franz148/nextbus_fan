@@ -1,13 +1,15 @@
 <template>
   <div class="md-layout md-gutter md-alignment-center-center">
-    <!-- Elemento switch per andata e ritorno -->
-    <div class="md-layout-item md-size-80 md-layout md-alignment-center-center">
-      <label>Andata</label>
-      <md-switch v-model="valoreSwitch">Ritorno</md-switch>
+
+    <div class="md-layout-item md-layout md-alignment-center-center md-size-100">
+      <md-tabs v-model="valoreAR" md-alignment="fixed">
+        <md-tab id="tab-andata" md-label="ANDATA" @click="valoreAR = false"></md-tab>
+        <md-tab id="tab-ritorno" md-label="RITORNO" @click="valoreAR = true"></md-tab>
+      </md-tabs>
     </div>
 
     <!-- Lista delle linee, che selezionando passa a linea singola l'id della linea e il long name -->
-    <md-list class="md-double-line md-layout-item md-size-60 md-xsmall-size-100">
+    <md-list class="md-double-line md-layout-item md-size-50 md-xsmall-size-100">
       <div v-for="(linea, i) in linee" :key="linea.id.id" v-bind:class="sceltaAR(linea.id.id)">
         <md-list-item
           :to="'/lineaSingola/' + linea.id.id + '?routeLongName='  + linea.routeLongName"
@@ -53,7 +55,7 @@ export default {
   data: () => ({
     linee: [],
     //di default mostra l'andata
-    valoreSwitch: false
+    valoreAR: false
   }),
   created: function() {
     Functions.getLinee(12).then(results => {
@@ -107,7 +109,7 @@ export default {
     },
     sceltaAR(id) {
       let classi = [];
-      if (this.valoreSwitch) {
+      if (this.valoreAR) {
         if (id.indexOf("A") != -1 || id == "02") {
           //nasconde le linee che nell'id contengono "A"
           classi.push("md-hide");
@@ -126,12 +128,11 @@ export default {
     ordinaLinee() {
       console.log(this.linee);
       let confronta = (a, b) => {
-        let tmpB =b.id.id.toUpperCase();
+        let tmpB = b.id.id.toUpperCase();
 
-        if (b.id.id == "1A" ) {
+        if (b.id.id == "1A") {
           tmpB = "01A";
-        }
-        else if (b.id.id == "1R") {
+        } else if (b.id.id == "1R") {
           tmpB = "01R";
         }
 
@@ -154,7 +155,5 @@ export default {
 </script>
 
 <style>
-.md-switch {
-  display: flex;
-}
+
 </style>
