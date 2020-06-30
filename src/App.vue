@@ -4,18 +4,13 @@
       <md-app-toolbar class="md-large md-dense md-primary">
         <div class="md-toolbar-row">
           <div class="md-toolbar-section-start">
-            <md-button class="md-icon-button">
-              <md-icon>directions_bus</md-icon>
-            </md-button>
-
-            <span class="md-title">
-              NextBus
-              <span v-if="checkAutenticazione()"> - Ciao
-                <b>{{getUsername()}}</b>!
-              </span>
-            </span>
+            <img :src="require('./assets/NEXTBUS_LOGO.png')" width="150" />
           </div>
           <div class="md-toolbar-section-end">
+            <span v-if="checkAutenticazione()">
+              Ciao
+              <b>{{getUsername()}}</b>!
+            </span>
             <md-button class="md-icon-button" v-if="!checkAutenticazione()" @click="login()">
               <md-icon>account_circle</md-icon>
             </md-button>
@@ -73,7 +68,7 @@ export default {
     checkAutenticazione() {
       return Accesso.isLoggedIn();
     },
-    login(){
+    login() {
       this.$router.push("/accesso");
     },
     logout() {
