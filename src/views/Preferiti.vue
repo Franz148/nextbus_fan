@@ -54,7 +54,7 @@
               md-icon="favorite_border"
               md-label="Non hai ancora preferiti"
               md-description="Se vuoi visualizzare qui le linee che consulti più spesso vai alla pagina Linee."
-              v-else
+              v-if="shownedEmptyState"
             >
               <md-button class="md-primary md-raised" to="/linee">Pagina linee</md-button>
             </md-empty-state>
@@ -102,19 +102,21 @@ export default {
   },
 
   created: function() {
+    if (Accesso.isLoggedIn()) {
+      const getLinee = Functions.getLinee(12);
+      const getPreferiti = Dbfunctions.getLineePreferite();
 
-    const getLinee = Functions.getLinee(12);
-    const getPreferiti = Dbfunctions.getLineePreferite();
+      axios.all([getLinee, getPreferiti]).then(
+        axios.spread((...responses) => {
+          this.datiLinee = responses[0].data;
+          this.lineePreferite = responses[1];
 
-    axios.all([getLinee, getPreferiti])
-    .then(axios.spread((...responses) => {
-      this.datiLinee = responses[0].data;
-      this.lineePreferite = responses[1];
+          this.activeSpinner = false;
 
-      this.activeSpinner = false;
-
-      if (this.lineePreferite.length == 0) this.shownedEmptyState = true;
-    }));
+          if (this.lineePreferite.length == 0) this.shownedEmptyState = true;
+        })
+      );
+    }
   }
 };
 </script>

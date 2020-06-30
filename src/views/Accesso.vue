@@ -21,7 +21,7 @@ import Accesso from "../login/access-functions.js";
 export default {
   data: () => ({
     activeDialog: true,
-    inserimentoNomeUtente: null
+    inserimentoNomeUtente: ""
   }),
   methods: {
     login() {
