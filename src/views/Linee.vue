@@ -1,6 +1,5 @@
 <template>
   <div class="md-layout md-gutter md-alignment-center-center">
-
     <div class="md-layout-item md-layout md-alignment-center-center md-size-100">
       <md-tabs v-model="valoreAR" md-alignment="fixed">
         <md-tab id="tab-andata" md-label="ANDATA" @click="valoreAR = false"></md-tab>
@@ -43,6 +42,20 @@
         <md-divider></md-divider>
       </div>
     </md-list>
+
+    <md-snackbar :md-active.sync="showSBadd" md-persistent>
+      <span>
+        La
+        <b>linea {{testoSnackbar}}</b> è stata aggiunta ai preferiti.
+      </span>
+    </md-snackbar>
+
+    <md-snackbar :md-active.sync="showSBremove" md-persistent>
+      <span>
+        La
+        <b>linea {{testoSnackbar}}</b> è stata rimossa dai preferiti.
+      </span>
+    </md-snackbar>
   </div>
 </template>
 
@@ -55,7 +68,10 @@ export default {
   data: () => ({
     linee: [],
     //di default mostra l'andata
-    valoreAR: false
+    valoreAR: false,
+    testoSnackbar: "",
+    showSBadd: false,
+    showSBremove: false
   }),
   created: function() {
     Functions.getLinee(12).then(results => {
@@ -99,11 +115,17 @@ export default {
         DBFunction.setLineaPreferita(id).then(() => {
           //imposta il parametro preferiti a 1, quindi mostra il cuore pieno e lo aggiunge al DB
           this.$set(this.linee[i], "preferiti", 1);
+
+          this.testoSnackbar = this.linee[i].routeShortName;
+          this.showSBadd = true;
         });
       } else if (preferiti == 1) {
         DBFunction.rimuoviLineaPreferita(id).then(() => {
           //imposta il parametro preferiti a 0, quindi mostra il cuore pieno e lo toglie al DB
           this.$set(this.linee[i], "preferiti", 0);
+
+          this.testoSnackbar = this.linee[i].routeShortName;
+          this.showSBremove = true;
         });
       }
     },
@@ -155,5 +177,4 @@ export default {
 </script>
 
 <style>
-
 </style>
