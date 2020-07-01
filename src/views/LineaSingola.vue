@@ -92,11 +92,11 @@
         <!--FERMATA DOVE NON PASSA IL BUS-->
         <div v-else>
           <md-list-item>
-            <md-icon>directions_bus</md-icon>
+            <md-icon class="iconaDisattivata">directions_bus</md-icon>
             <div class="md-list-item-text">
-              <span>{{nomeFermate[n]}}</span>
+              <span class="testoDisattivato">{{nomeFermate[n]}}</span>
             </div>
-            <md-icon v-if="ritornaAccessibile(accessibilita,n) ==1">accessible</md-icon>
+            <md-icon  class="iconaDisattivata" v-if="ritornaAccessibile(accessibilita,n) ==1">accessible</md-icon>
           </md-list-item>
         </div>
         <md-divider></md-divider>
@@ -318,5 +318,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+
+.iconaDisattivata, .testoDisattivato {
+  color: lightgray !important;
+}
+
 </style>
