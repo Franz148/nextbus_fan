@@ -9,7 +9,6 @@ import "./style/custom-theme.scss";
 
 Vue.config.productionTip = false;
 
-
 Vue.use(VueMaterial);
 
 //Global configuration

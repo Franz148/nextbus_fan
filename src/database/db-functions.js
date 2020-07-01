@@ -32,7 +32,6 @@ export default {
                 return arrayLinee;
             });
     },
-    /*  */
     setLineaPreferita(idLinea) {
         var user = Accesso.getUsername().toLowerCase();
         return elementiPreferiti
@@ -67,8 +66,5 @@ export default {
                 });
                 return arrayLinee;
             });
-
     }
-
-    /*  */
 }
