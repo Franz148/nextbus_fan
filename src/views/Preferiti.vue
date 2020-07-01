@@ -62,6 +62,13 @@
         </md-card-content>
       </md-card>
     </div>
+
+    <md-snackbar :md-active.sync="showSBremove" md-persistent>
+      <span>
+        La
+        <b>linea {{testoSnackbar}}</b> è stata rimossa dai preferiti.
+      </span>
+    </md-snackbar>
   </div>
 </template>
 
@@ -76,7 +83,9 @@ export default {
     datiLinee: [],
     lineePreferite: [],
     activeSpinner: true,
-    shownedEmptyState: false
+    shownedEmptyState: false,
+    showSBremove: false,
+    testoSnackbar: ""
   }),
   methods: {
     checkAutenticazione() {
@@ -96,6 +105,9 @@ export default {
         Dbfunctions.rimuoviLineaPreferita(id).then(() => {
           this.lineePreferite.splice(i, 1);
           if (this.lineePreferite.length == 0) this.shownedEmptyState = true;
+
+          this.showSBremove = true;
+          this.testoSnackbar = this.returnLineaSingola(id).routeShortName;
         });
       }
     }
