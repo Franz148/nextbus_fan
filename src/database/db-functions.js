@@ -32,7 +32,6 @@ export default {
                 return arrayLinee;
             });
     },
-
     setLineaPreferita(idLinea) {
         var user = Accesso.getUsername().toLowerCase();
         return elementiPreferiti
@@ -41,8 +40,6 @@ export default {
                 idLinea: idLinea,
                 username: user
             });
-
-
     },
     rimuoviLineaPreferita(idLinea) {
         var user = Accesso.getUsername().toLowerCase();
@@ -55,7 +52,19 @@ export default {
                     return elementiPreferiti.doc(doc.id).delete();
                 });
             });
-
-
+    },
+    getLineaSingolaPreferita(idLinea) {
+        var user = Accesso.getUsername().toLowerCase();
+        var arrayLinee = [];
+        return elementiPreferiti
+            .where("idLinea", "==", idLinea)
+            .where("username", "==", user)
+            .get()
+            .then(results => {
+                results.forEach(doc => {
+                    arrayLinee.push(doc.data());
+                });
+                return arrayLinee;
+            });
     }
 }
