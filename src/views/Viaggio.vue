@@ -1,13 +1,17 @@
 <template>
-  <div class="md-layout md-alignment-center-center">
-    <md-card class="md-layout-item md-size-50 md-small-size-90">
+  <div>
+    <md-card class="md-layout-item md-size-100">
       <md-card-header>
         <div class="md-title">Risultati ricerca</div>
       </md-card-header>
 
-      <md-card-content>
-        <md-list md-expand-single="true">
-          <div v-for="viaggio in risultati" :key="viaggio.duration">
+      <md-card-content class="md-layout md-alignment-center-center">
+        <div class="md-layout-item md-size-5">
+          <md-progress-spinner md-mode="indeterminate" v-show="activeSpinner"></md-progress-spinner>
+        </div>
+
+        <md-list md-expand-single="true" class="md-layout-item md-size-100">
+          <div v-for="(viaggio, i) in risultati" :key="i">
             <md-list-item md-expand>
               <md-icon v-if="viaggio.walkingDuration == (viaggio.duration / 1000)">directions_walk</md-icon>
               <md-icon v-if="viaggio.walkingDuration != (viaggio.duration / 1000)">directions_bus</md-icon>
@@ -27,17 +31,35 @@
                 <b>{{convertTimestampToTime(viaggio.endtime)}}</b>
               </span>
 
-              <md-list slot="md-expand">
+              <md-list slot="md-expand" class="md-double-line">
                 <md-list-item
                   class="md-inset"
                   v-for="(item, index) in viaggio.leg"
                   :key="item.endtime"
                 >
-                  <md-icon v-if="item.transport.type == 'WALK'">directions_walk</md-icon>
-                  <md-icon v-if="item.transport.type == 'BUS'">directions_bus</md-icon>
-                  <md-icon v-if="item.transport.type == 'TRAIN'">train</md-icon>
-                  <span class="md-list-item-text" v-if="item.transport.type != 'BUS'">{{index + 1}}) P: {{item.from.name}} | A: {{item.to.name}}</span>
-                  <span class="md-list-item-text" v-if="item.transport.type == 'BUS'">{{index + 1}}) Linea: {{item.transport.routeShortName}} | P: {{item.from.name}} | A: {{item.to.name}}</span>
+                  <md-avatar class="md-avatar-icon" v-if="item.transport.type == 'WALK'">
+                    <md-icon>directions_walk</md-icon>
+                  </md-avatar>
+                  <md-avatar
+                    class="md-avatar-icon"
+                    v-if="item.transport.type == 'BUS' && item.transport.agencyId != 12"
+                  >
+                    <md-icon>directions_bus</md-icon>
+                  </md-avatar>
+                  <md-avatar v-if="item.transport.type == 'BUS' && item.transport.agencyId == 12">
+                    <img :src="getImageFromId(item.transport.routeId)" />
+                  </md-avatar>
+                  <md-avatar class="md-avatar-icon" v-if="item.transport.type == 'TRAIN'">
+                    <md-icon>train</md-icon>
+                  </md-avatar>
+                  <div class="md-list-item-text">
+                    <span
+                      v-if="item.transport.type == 'BUS' && item.transport.agencyId != 12"
+                    >{{index + 1}}) Linea: {{item.transport.routeShortName}} | P: {{item.from.name}} | A: {{item.to.name}}</span>
+                    <span v-else>{{index + 1}}) P: {{item.from.name}} | A: {{item.to.name}}</span>
+
+                    <span>Partenza alle: {{convertTimestampToTime(item.startime)}}</span>
+                  </div>
                 </md-list-item>
               </md-list>
             </md-list-item>
@@ -51,6 +73,7 @@
 
 <script>
 import Functions from "../api/functions.js";
+var _ = require("lodash");
 
 export default {
   data: () => ({
@@ -58,10 +81,14 @@ export default {
     indirizzoP: "",
     indirizzoA: "",
     dataPartenza: "",
-    oraPartenza: ""
+    oraPartenza: "",
+    activeSpinner: true
   }),
 
   methods: {
+    getImageFromId(id) {
+      return require("../assets/iconeLinee/" + id + ".png");
+    },
     convertTimestampToTime(unix_timestamp) {
       // Create a new JavaScript Date object based on the timestamp
       // multiplied by 1000 so that the argument is in milliseconds, not seconds.
@@ -102,24 +129,35 @@ export default {
         time[0] = +time[0] % 12 || 12; // Adjust hours
       }
       return time.join(""); // return adjusted time or original string
-    }
-  },
-  created: function() {
-    this.indirizzoP = this.$route.query.indirizzoP;
-    this.indirizzoA = this.$route.query.indirizzoA;
-    this.dataPartenza = this.$route.query.dataPartenza;
-    this.oraPartenza = this.tConvert(this.$route.query.oraPartenza);
+    },
 
-    if (this.risultati.length == 0) {
+    loadViaggio() {
+      this.indirizzoP = this.$route.query.indirizzoP;
+      this.indirizzoA = this.$route.query.indirizzoA;
+      this.dataPartenza = this.$route.query.dataPartenza;
+      this.oraPartenza = this.tConvert(this.$route.query.oraPartenza);
+
       Functions.pianificaViaggio(
         this.indirizzoP,
         this.indirizzoA,
         this.dataPartenza,
         this.oraPartenza
       ).then(results => {
-        this.risultati = results.data;
-        console.log(results);
+        this.activeSpinner = false;
+
+        this.risultati = Object.assign({}, this.risultati, results.data);
       });
+    }
+  },
+  created: function() {
+    this.loadViaggio();
+  },
+
+  watch: {
+    $route(from, to) {
+      if (_.isEqual(from.query, to.query) == false) {
+        this.loadViaggio();
+      }
     }
   }
 };
