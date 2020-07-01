@@ -2,7 +2,7 @@
   <div>
     <md-card class="md-layout-item md-size-100">
       <md-card-header>
-        <div class="md-title">Risultati ricerca</div>
+        <div class="md-title">Risultati della ricerca</div>
       </md-card-header>
 
       <md-card-content class="md-layout md-alignment-center-center">
@@ -68,6 +68,10 @@
         </md-list>
       </md-card-content>
     </md-card>
+    <md-snackbar :md-active.sync="showSBErrore" :md-duration="duration">
+      <span>La ricerca non è andata a buon fine!</span>
+      <md-button class="md-primary" @click="ricercaFallita()">Riprova</md-button>
+    </md-snackbar>
   </div>
 </template>
 
@@ -82,7 +86,9 @@ export default {
     indirizzoA: "",
     dataPartenza: "",
     oraPartenza: "",
-    activeSpinner: true
+    activeSpinner: true,
+    showSBErrore: false,
+    duration: Infinity
   }),
 
   methods: {
@@ -146,7 +152,16 @@ export default {
         this.activeSpinner = false;
 
         this.risultati = Object.assign({}, this.risultati, results.data);
+      })
+      .catch(() => {
+        this.showSBErrore = true;
       });
+    },
+    ricercaFallita(){
+      this.showSBErrore = false;
+
+      this.$router.replace({'query': null});
+      this.$router.push("/pianifica");
     }
   },
   created: function() {
