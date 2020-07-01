@@ -155,7 +155,7 @@ export default {
       this.$router.push("/pianifica");
     },
     submit() {
-      //this.$v.$touch();
+      this.$v.$touch();
 
       if (!this.$v.$invalid) {
         let queryParams = {
