@@ -102,6 +102,20 @@
         <md-divider></md-divider>
       </div>
     </md-list>
+
+    <md-snackbar :md-active.sync="showSBadd" md-persistent>
+      <span>
+        La
+        <b>linea {{testoSnackbar}}</b> è stata aggiunta ai preferiti.
+      </span>
+    </md-snackbar>
+
+    <md-snackbar :md-active.sync="showSBremove" md-persistent>
+      <span>
+        La
+        <b>linea {{testoSnackbar}}</b> è stata rimossa dai preferiti.
+      </span>
+    </md-snackbar>
   </div>
 </template>
 
@@ -128,7 +142,10 @@ export default {
     orariPartenzaLinea: [],
     selezionato: 0, //all'inizio mostro la prima trip
     preferito: false,
-    mostra:true
+    mostra:true,
+    showSBadd: false,
+    showSBremove: false,
+    testoSnackbar: ""
   }),
 
   created: function() {
@@ -291,10 +308,16 @@ export default {
       if (preferiti == false) {
         DBFunction.setLineaPreferita(id).then(() => {
           this.preferito = true;
+
+          this.showSBadd = true;
+          this.testoSnackbar = this.$route.query.routeLongName;
         });
       } else if (preferiti == true) {
         DBFunction.rimuoviLineaPreferita(id).then(() => {
           this.preferito = false;
+
+          this.showSBremove = true;
+          this.testoSnackbar = this.$route.query.routeLongName;
         });
       }
     }
@@ -313,6 +336,12 @@ export default {
         this.isButtonSuccessivoDisabled = true;
         this.isButtonPrecedenteDisabled = false;
       }
+
+      if(this.current != 0 && this.current != this.viaggi.length - 1){
+        this.isButtonSuccessivoDisabled = false;
+        this.isButtonPrecedenteDisabled = false;
+      }
+
     }
   }
 };
