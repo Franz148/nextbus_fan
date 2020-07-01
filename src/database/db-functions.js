@@ -31,5 +31,44 @@ export default {
 
                 return arrayLinee;
             });
+    },
+    /*  */
+    setLineaPreferita(idLinea) {
+        var user = Accesso.getUsername().toLowerCase();
+        return elementiPreferiti
+            .add({
+                idFermata: "-1",
+                idLinea: idLinea,
+                username: user
+            });
+    },
+    rimuoviLineaPreferita(idLinea) {
+        var user = Accesso.getUsername().toLowerCase();
+        return elementiPreferiti
+            .where("idLinea", "==", idLinea)
+            .where("username", "==", user)
+            .get()
+            .then(results => {
+                results.forEach(doc => {
+                    return elementiPreferiti.doc(doc.id).delete();
+                });
+            });
+    },
+    getLineaSingolaPreferita(idLinea) {
+        var user = Accesso.getUsername().toLowerCase();
+        var arrayLinee = [];
+        return elementiPreferiti
+            .where("idLinea", "==", idLinea)
+            .where("username", "==", user)
+            .get()
+            .then(results => {
+                results.forEach(doc => {
+                    arrayLinee.push(doc.data());
+                });
+                return arrayLinee;
+            });
+
     }
+
+    /*  */
 }
