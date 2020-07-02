@@ -98,6 +98,7 @@
 
 <script>
 import format from "date-fns/format";
+var _ = require("lodash");
 
 import { validationMixin } from "vuelidate";
 import { required, minLength } from "vuelidate/lib/validators";
@@ -167,7 +168,18 @@ export default {
 
         this.sending = true;
 
-        this.$router.push({ path: "/pianifica/viaggio", query: Object.assign({}, this.$route.query, queryParams) });
+        this.$router.push({
+          path: "/pianifica/viaggio",
+          query: Object.assign({}, this.$route.query, queryParams)
+        });
+      }
+    }
+  },
+
+  watch: {
+    $route(from) {
+      if (_.isEmpty(from.query)) {
+        this.sending = false;
       }
     }
   }

@@ -66,6 +66,14 @@
             <md-divider></md-divider>
           </div>
         </md-list>
+
+        <md-empty-state
+          md-rounded
+          md-icon="error"
+          md-label="C'è stato un errore nella ricerca"
+          md-description="Clicca su riprova e reinserisci la partenza e la destinazione."
+          v-if="showSBErrore"
+        ></md-empty-state>
       </md-card-content>
     </md-card>
     <md-snackbar :md-active.sync="showSBErrore" :md-duration="duration">
@@ -148,19 +156,21 @@ export default {
         this.indirizzoA,
         this.dataPartenza,
         this.oraPartenza
-      ).then(results => {
-        this.activeSpinner = false;
+      )
+        .then(results => {
+          this.activeSpinner = false;
 
-        this.risultati = Object.assign({}, this.risultati, results.data);
-      })
-      .catch(() => {
-        this.showSBErrore = true;
-      });
+          this.risultati = results.data;
+        })
+        .catch(() => {
+          this.showSBErrore = true;
+          this.activeSpinner = false;
+        });
     },
-    ricercaFallita(){
+    ricercaFallita() {
       this.showSBErrore = false;
 
-      this.$router.replace({'query': null});
+      this.$router.replace({ query: null });
       this.$router.push("/pianifica");
     }
   },
