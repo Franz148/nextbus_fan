@@ -1,17 +1,20 @@
 <template>
   <div class="md-layout md-alignment-center-center">
+    <!-- CARD -->
     <md-card class="md-layout-item md-size-60 md-small-size-80 md-xsmall-size-90">
       <md-card-header class="md-layout md-gutter md-alignment-center">
+        <!-- avatar linea -->
         <div class="md-layout-item md-size-15 md-xsmall-size-25">
           <md-avatar>
             <img :src="getImageFromId(idRoutes)" />
           </md-avatar>
         </div>
-        <div class="md-layout-item md-size-75 md-xsmall-size-80">
+        <!-- nome linea -->
+        <div class="md-layout-item md-size-70 md-xsmall-size-80">
           <div class="md-title">{{$route.query.routeLongName}}</div>
         </div>
-
-        <div class="md-layout-item md-size-10 md-xsmall-size-20">
+        <!-- preferiti -->
+        <div class="md-layout-item md-size-15 md-xsmall-size-20">
           <md-button
             class="md-icon-button"
             @click.stop.prevent="addFavoriteLine(idRoutes, preferito)"
@@ -29,9 +32,10 @@
           </md-button>
         </div>
       </md-card-header>
-
+      
       <md-card-expand v-show="mostra">
         <md-card-actions class="md-layout md-gutter">
+          <!-- precedente -->
           <md-button
             class="md-layout-item md-xsmall-size-20"
             v-bind:disabled="isButtonPrecedenteDisabled"
@@ -39,7 +43,7 @@
           >
             <md-icon>navigate_before</md-icon>
           </md-button>
-
+          <!-- select orario partenza linea -->
           <md-field class="md-layout-item md-xsmall-size-60">
             <label>Partenza alle</label>
             <md-select v-model="selezionato">
@@ -50,7 +54,7 @@
               >{{item}}</md-option>
             </md-select>
           </md-field>
-
+          <!-- successivo -->
           <md-button
             class="md-layout-item md-xsmall-size-20"
             v-bind:disabled="isButtonSuccessivoDisabled"
@@ -61,6 +65,9 @@
         </md-card-actions>
       </md-card-expand>
     </md-card>
+    <!--  -->
+
+    <!-- SPINNER CARICAMENTO -->
     <div class="md-layout md-layout-item md-size-100 md-alignment-center">
       <md-progress-spinner md-mode="indeterminate" v-show="caricamento"></md-progress-spinner>
     </div>
@@ -75,6 +82,7 @@
       ></md-empty-state>
     </div>
 
+    <!-- LISTA FERMATE -->
     <md-list class="md-layout-item md-size-60 md-small-size-80 md-xsmall-size-90">
       <div v-for="(id,n) in idFermate" :key="n">
         <!--FERMATA DOVE PASSA IL BUS-->
@@ -108,13 +116,14 @@
       </div>
     </md-list>
 
+    <!-- AVVISO AGGIUNTO AI PREFERITI -->
     <md-snackbar :md-active.sync="showSBadd" md-persistent>
       <span>
         La
         <b>linea {{testoSnackbar}}</b> è stata aggiunta ai preferiti.
       </span>
     </md-snackbar>
-
+    <!-- AVVISO RIMOSSO DAI PREFERITI -->
     <md-snackbar :md-active.sync="showSBremove" md-persistent>
       <span>
         La
@@ -126,10 +135,9 @@
 
 <script>
 import Functions from "../api/functions.js";
-/*  */
 import DBFunction from "../database/db-functions.js";
 import Accesso from "../login/access-functions.js";
-/*  */
+
 export default {
   data: () => ({
     idFermate: [],
@@ -155,7 +163,7 @@ export default {
   }),
 
   created: function() {
-    //SOSTITUISCO GLI ID INESISTENTI PASSATI DA LINEE
+    //sostituisco gli id inesistenti passati da linee
     switch (this.$route.params.id) {
       case "1A":
         this.idRoutes = "01A";
@@ -188,7 +196,7 @@ export default {
       default:
         this.idRoutes = this.$route.params.id;
     }
-
+    //controllo se è stato fatto il login
     if (Accesso.isLoggedIn()) {
       DBFunction.getLineaSingolaPreferita(this.idRoutes)
         .then(results3 => {
@@ -198,7 +206,7 @@ export default {
           console.error(error);
         });
     }
-
+    //prendo tutte le fermate della linea selezionata in linee
     Functions.getLineaSingolaConOrario(this.idAgency, this.idRoutes)
       .then(results => {
         this.idFermate = results.data.stopIds;
@@ -206,9 +214,9 @@ export default {
         //la posizione di results.data.trips è l'array di trips
         this.viaggi = results.data.trips;
         this.caricamento = false;
-        //all'avvio carico di default gli orari del primo viaggio
+        //all'avvio carico di default gli orari del primo viaggio della giornata
         this.orari = this.viaggi[0].stopTimes;
-        
+
         this.caricoArraySelect(this.viaggi);
       })
       .catch(error => {
@@ -216,9 +224,9 @@ export default {
         // orari non disponibili perchè l'array è vuoto oppure l'id è inesistente
         this.orariNonDisponibili = true;
         this.mostra = false;
-        this.caricamento=false;
+        this.caricamento = false;
       });
-
+    //prendo i dati di accessibilità per ogni fermata
     Functions.getLineaSingolaAccessibilita(this.idAgency, this.idRoutes)
       .then(results2 => {
         this.accessibilita = results2.data;
@@ -228,6 +236,7 @@ export default {
       });
   },
   methods: {
+    //ricambio l'id per le immagini degli avatar e le prendo dal DB
     getImageFromId(id) {
       switch (id) {
         case "01A":
@@ -309,7 +318,7 @@ export default {
     },
 
     addFavoriteLine(id, preferiti) {
-      //aggiunge ai preferiti la linea visualizzata
+      //aggiunge ai preferiti la linea visualizzata solo se è stato eseguito l'accesso
       if (!Accesso.isLoggedIn()) this.$router.push("/accesso");
       if (preferiti == false) {
         DBFunction.setLineaPreferita(id).then(() => {
@@ -331,7 +340,7 @@ export default {
 
   watch: {
     selezionato: function() {
-      //controllo il cambiamento della trip selezionata
+      //controllo il cambiamento della trip selezionata dal select o da precedente e successivo 
       this.current = this.selezionato;
       this.orari = this.viaggi[this.current].stopTimes;
       if (this.current == 0) {
