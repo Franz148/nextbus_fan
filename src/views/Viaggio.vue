@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <md-card class="md-layout-item md-size-100">
+  <div class="md-layout-item md-size-100">
+    <md-card class="md-layout-item md-size-90">
       <md-card-header>
-        <div class="md-title">Risultati ricerca</div>
+        <div class="md-title">Risultati della ricerca</div>
       </md-card-header>
 
       <md-card-content class="md-layout md-alignment-center-center">
@@ -10,28 +10,29 @@
           <md-progress-spinner md-mode="indeterminate" v-show="activeSpinner"></md-progress-spinner>
         </div>
 
-        <md-list md-expand-single="true" class="md-layout-item md-size-100">
+        <md-list md-expand-single="true" class="md-layout-item md-size-100 md-triple-line">
           <div v-for="(viaggio, i) in risultati" :key="i">
             <md-list-item md-expand>
               <md-icon v-if="viaggio.walkingDuration == (viaggio.duration / 1000)">directions_walk</md-icon>
               <md-icon v-if="viaggio.walkingDuration != (viaggio.duration / 1000)">directions_bus</md-icon>
+              <div class="md-list-item-text">
+                <span>
+                  Partenza
+                  <b>{{convertTimestampToTime(viaggio.startime)}}</b>
+                </span>
 
-              <span class="md-list-item-text">
-                Durata
-                <b>{{msToHMS(viaggio.duration)}}</b>
-              </span>
+                <span>
+                  Arrivo
+                  <b>{{convertTimestampToTime(viaggio.endtime)}}</b>
+                </span>
 
-              <span class="md-list-item-text">
-                Partenza
-                <b>{{convertTimestampToTime(viaggio.startime)}}</b>
-              </span>
+                <span>
+                  Durata
+                  <b>{{msToHMS(viaggio.duration)}}</b>
+                </span>
+              </div>
 
-              <span class="md-list-item-text">
-                Arrivo
-                <b>{{convertTimestampToTime(viaggio.endtime)}}</b>
-              </span>
-
-              <md-list slot="md-expand" class="md-double-line">
+              <md-list slot="md-expand" class="md-triple-line">
                 <md-list-item
                   class="md-inset"
                   v-for="(item, index) in viaggio.leg"
@@ -55,8 +56,9 @@
                   <div class="md-list-item-text">
                     <span
                       v-if="item.transport.type == 'BUS' && item.transport.agencyId != 12"
-                    >{{index + 1}}) Linea: {{item.transport.routeShortName}} | P: {{item.from.name}} | A: {{item.to.name}}</span>
-                    <span v-else>{{index + 1}}) P: {{item.from.name}} | A: {{item.to.name}}</span>
+                    >{{index + 1}}) Linea: {{item.transport.routeShortName}} | P: {{item.from.name}}</span>
+                    <span v-else>{{index + 1}}) P: {{item.from.name}}</span>
+                    <span>A: {{item.to.name}}</span>
 
                     <span>Partenza alle: {{convertTimestampToTime(item.startime)}}</span>
                   </div>
@@ -66,8 +68,20 @@
             <md-divider></md-divider>
           </div>
         </md-list>
+
+        <md-empty-state
+          md-rounded
+          md-icon="error"
+          md-label="C'è stato un errore nella ricerca"
+          md-description="Clicca su riprova e reinserisci la partenza e la destinazione."
+          v-if="showSBErrore"
+        ></md-empty-state>
       </md-card-content>
     </md-card>
+    <md-snackbar :md-active.sync="showSBErrore" :md-duration="duration">
+      <span>La ricerca non è andata a buon fine!</span>
+      <md-button class="md-primary" @click="ricercaFallita()">Riprova</md-button>
+    </md-snackbar>
   </div>
 </template>
 
@@ -82,7 +96,9 @@ export default {
     indirizzoA: "",
     dataPartenza: "",
     oraPartenza: "",
-    activeSpinner: true
+    activeSpinner: true,
+    showSBErrore: false,
+    duration: Infinity
   }),
 
   methods: {
@@ -102,18 +118,21 @@ export default {
       return hours + ":" + minutes.substr(-2);
     },
 
-    msToHMS(ms) {
-      // 1- Convert to seconds:
-      var seconds = ms / 1000;
-      // 2- Extract hours:
-      var hours = parseInt(seconds / 3600); // 3,600 seconds in 1 hour
-      seconds = seconds % 3600; // seconds remaining after extracting hours
-      // 3- Extract minutes:
-      var minutes = parseInt(seconds / 60); // 60 seconds in 1 minute
-      // 4- Keep only seconds not extracted to minutes:
-      seconds = seconds % 60;
+    msToHMS(s) {
+      // Pad to 2 or 3 digits, default is 2
+      function pad(n, z) {
+        z = z || 2;
+        return ("00" + n).slice(-z);
+      }
 
-      return hours + ":" + minutes + ":" + seconds;
+      var ms = s % 1000;
+      s = (s - ms) / 1000;
+      var secs = s % 60;
+      s = (s - secs) / 60;
+      var mins = s % 60;
+      var hrs = (s - mins) / 60;
+
+      return pad(hrs) + ":" + pad(mins) + ":" + pad(secs);
     },
 
     tConvert(time) {
@@ -142,11 +161,22 @@ export default {
         this.indirizzoA,
         this.dataPartenza,
         this.oraPartenza
-      ).then(results => {
-        this.activeSpinner = false;
+      )
+        .then(results => {
+          this.activeSpinner = false;
 
-        this.risultati = Object.assign({}, this.risultati, results.data);
-      });
+          this.risultati = results.data;
+        })
+        .catch(() => {
+          this.showSBErrore = true;
+          this.activeSpinner = false;
+        });
+    },
+    ricercaFallita() {
+      this.showSBErrore = false;
+
+      this.$router.replace({ query: null });
+      this.$router.push("/pianifica");
     }
   },
   created: function() {
@@ -163,5 +193,5 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 </style>
