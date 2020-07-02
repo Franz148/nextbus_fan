@@ -6,7 +6,8 @@
         <md-tab id="tab-ritorno" md-label="RITORNO" @click="valoreAR = true"></md-tab>
       </md-tabs>
       <div class="md-layout-item md-size-5">
-       <br/> <md-progress-spinner md-mode="indeterminate" v-show="activeSpinner"></md-progress-spinner>
+        <br/>
+        <md-progress-spinner md-mode="indeterminate" v-show="activeSpinner"></md-progress-spinner>
       </div>
     </div>
 
@@ -84,13 +85,8 @@ export default {
       this.addFavoriteField(this.linee);
       //si può aggiungere una linea nei preferiti solo se è stato fatto l'accesso
       if (Accesso.isLoggedIn()) this.setFavorite(this.linee);
+      this.activeSpinner= false;
     });
-
-    //   axios.all ([getLinee, getPreferiti]).then(
-    //   axios.spread((...responses) => {
-    //   this.linee= responses[0].data;
-    //  this.lineePreferite = responses [1];
-    //  this.activeSpinner= false;
   },
 
   methods: {
@@ -107,12 +103,11 @@ export default {
       let lineePreferite = [];
       DBFunction.getLineePreferite().then(results => {
         lineePreferite = results;
-        for (let i = 0; i < linee.length; i++) {
-          for (let i2 = 0; i2 < lineePreferite.length; i2++) {
-            if (linee[i].id.id == lineePreferite[i2].idLinea) {
-              this.$set(linee[i], "preferiti", 1);
-            }
-          }
+        for (let i2 = 0; i2 < lineePreferite.length; i2++) {
+          let elementoPreferito = linee.find(
+            linea => linea.id.id == lineePreferite[i2].idLinea
+          );
+            this.$set(elementoPreferito, "preferiti", 1);
         }
       });
     },
