@@ -11,7 +11,7 @@
       </md-empty-state>
 
       <md-card
-        class="md-layout-item md-xsmall-size-90 md-small-size-80 md-size-60"
+        class="md-layout-item md-size-60 md-small-size-80 md-xsmall-size-90"
         v-if="checkAutenticazione()"
       >
         <md-card-header>

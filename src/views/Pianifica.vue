@@ -1,18 +1,18 @@
 <template>
-  <div class="md-layout md-alignment-top-center margin">
+  <div class="md-layout md-alignment-top-center">
     <form
       novalidate
-      class="md-layout-item md-layout md-alignment-center-center"
-      :class="{'md-size-60': !sending, 'md-size-30': sending}"
+      class="md-layout md-alignment-center-center md-layout-item md-small-size-80 md-xsmall-size-90"
+      :class="{'md-size-60': !sending, 'md-size-40': sending}"
       @submit.prevent="submit()"
     >
-      <md-card class="md-layout-item md-size-100 md-small-size-100">
+      <md-card class="md-layout-item md-size-90">
         <md-card-header>
           <div class="md-title">Pianifica il tuo viaggio</div>
         </md-card-header>
 
         <md-card-content>
-          <div class="md-layout">
+          <div class="md-layout md-alignment-center-center">
             <div class="md-layout-item md-size-100">
               <label class="md-subheading">Partenza</label>
               <md-field :class="getValidationClass('indirizzoP')">
@@ -49,7 +49,7 @@
 
             <div class="md-layout-item md-size-100 md-layout md-alignment-center-space-between">
               <label class="md-subheading md-layout-item md-size-100">Data e ora della partenza 🚌</label>
-              <div class="md-layout-item md-size-50 md-medium-size-100">
+              <div class="md-layout-item md-size-50 md-xsmall-size-100">
                 <md-datepicker
                   v-model="form.dataPartenza"
                   :md-open-on-focus="true"
@@ -66,7 +66,7 @@
               </div>
 
               <div
-                class="md-layout-item md-size-30 md-layout md-alignment-center-center md-medium-size-100"
+                class="md-layout-item md-size-40 md-layout md-alignment-center-center md-xsmall-size-100"
               >
                 <md-field :class="getValidationClass('oraPartenza')">
                   <md-input type="time" v-model="form.oraPartenza" />
@@ -80,16 +80,23 @@
           </div>
         </md-card-content>
 
-        <md-card-actions>
-          <md-button type="reset" @click="clearForm()">Annulla</md-button>
-          <md-button type="submit" class="md-primary">Cerca</md-button>
+        <md-card-actions class="md-layout md-alignment-center-right">
+          <md-button
+            class="md-layout-item md-size-20 md-xsmall-size-100"
+            type="reset"
+            @click="clearForm()"
+          >Annulla</md-button>
+          <md-button
+            class="md-layout-item md-size-20 md-xsmall-size-100 md-primary"
+            type="submit"
+          >Cerca</md-button>
         </md-card-actions>
       </md-card>
     </form>
 
     <div
-      class="md-layout-item"
-      :class="{'md-size-70': sending, 'md-size-80': !sending, 'margin': !sending}"
+      class="md-layout-item md-small-size-80 ms-xsmall-size-90 bodySecond"
+      :class="{'md-size-50': sending, 'md-size-100': !sending}"
     >
       <router-view></router-view>
     </div>
@@ -187,7 +194,9 @@ export default {
 </script>
 
 <style scoped>
-.margin {
-  margin-top: 30px;
+@media only screen and (max-width: 960px) {
+  .bodySecond {
+    margin-top: 30px;
+  }
 }
 </style>
