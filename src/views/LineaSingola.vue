@@ -1,79 +1,81 @@
 <template>
   <div class="md-layout md-alignment-center-center">
-    <md-card class="md-layout-item md-size-50 md-small-size-80 md-xsmall-size-100">
-      <md-card-header>
-        <div class="md-layout md-gutter">
-          <div class="md-layout-item md-size-15">
-            <md-avatar>
-              <img :src="getImageFromId(idRoutes)" />
-            </md-avatar>
-          </div>
-          <div class="md-layout-item md-size-75">
-            <div class="md-title">{{$route.query.routeLongName}}</div>
-          </div>
-          
-          <div class="md-layout-item md-size-10">
-            <md-button
-              class="md-icon-button"
-              @click.stop.prevent="addFavoriteLine(idRoutes, preferito)"
-              v-if="!preferito"
-            >
-              <md-icon>favorite_border</md-icon>
-            </md-button>
+    <md-card class="md-layout-item md-size-60 md-small-size-80 md-xsmall-size-90">
+      <md-card-header class="md-layout md-gutter md-alignment-center">
+        <div class="md-layout-item md-size-15 md-xsmall-size-25">
+          <md-avatar>
+            <img :src="getImageFromId(idRoutes)" />
+          </md-avatar>
+        </div>
+        <div class="md-layout-item md-size-75 md-xsmall-size-80">
+          <div class="md-title">{{$route.query.routeLongName}}</div>
+        </div>
 
-            <md-button
-              class="md-icon-button md-primary"
-              @click.stop.prevent="addFavoriteLine(idRoutes, preferito)"
-              v-if="preferito"
-            >
-              <md-icon>favorite</md-icon>
-            </md-button>
-          </div>
+        <div class="md-layout-item md-size-10 md-xsmall-size-20">
+          <md-button
+            class="md-icon-button"
+            @click.stop.prevent="addFavoriteLine(idRoutes, preferito)"
+            v-if="!preferito"
+          >
+            <md-icon>favorite_border</md-icon>
+          </md-button>
+
+          <md-button
+            class="md-icon-button md-primary"
+            @click.stop.prevent="addFavoriteLine(idRoutes, preferito)"
+            v-if="preferito"
+          >
+            <md-icon>favorite</md-icon>
+          </md-button>
         </div>
       </md-card-header>
-      <!--  -->
+
       <md-card-expand v-show="mostra">
-        <md-card-actions md-alignment="space-between">
-          <div>
-            <md-button
-              v-bind:disabled="isButtonPrecedenteDisabled"
-              v-on:click="precedente"
-            >Precedente</md-button>
-          </div>
-          <!--  SELECT -->
-          <div class="md-layout-item md-size-50">
-            <md-field>
-              <!--  -->
-              <label>Partenza alle</label>
-              <!--  -->
-              <md-select v-model="selezionato">
-                <md-option
-                  v-for="(item,index) in orariPartenzaLinea"
-                  v-bind:key="index"
-                  :value="index"
-                >{{item}}</md-option>
-              </md-select>
-            </md-field>
-          </div>
-          <!--  -->
-          <div>
-            <md-button v-bind:disabled="isButtonSuccessivoDisabled" @click="successivo">Successivo</md-button>
-          </div>
+        <md-card-actions class="md-layout md-gutter">
+          <md-button
+            class="md-layout-item md-xsmall-size-20"
+            v-bind:disabled="isButtonPrecedenteDisabled"
+            v-on:click="precedente"
+          >
+            <md-icon>navigate_before</md-icon>
+          </md-button>
+
+          <md-field class="md-layout-item md-xsmall-size-60">
+            <label>Partenza alle</label>
+            <md-select v-model="selezionato">
+              <md-option
+                v-for="(item,index) in orariPartenzaLinea"
+                v-bind:key="index"
+                :value="index"
+              >{{item}}</md-option>
+            </md-select>
+          </md-field>
+
+          <md-button
+            class="md-layout-item md-xsmall-size-20"
+            v-bind:disabled="isButtonSuccessivoDisabled"
+            v-on:click="successivo"
+          >
+            <md-icon>navigate_next</md-icon>
+          </md-button>
         </md-card-actions>
       </md-card-expand>
     </md-card>
+    <div class="md-layout md-layout-item md-size-100 md-alignment-center">
+      <md-progress-spinner md-mode="indeterminate" v-show="caricamento"></md-progress-spinner>
+    </div>
 
     <!--AVVISO ORARI NON DISPONIBILI-->
     <div class="md-layout-item md-size-100" v-show="orariNonDisponibili">
       <md-empty-state
-      class="md-accent"
-      md-icon="search_off"
-      md-label="Orari non disponibili"
-      md-description="Oggi non passa nessun autobus su questa linea.">
-    </md-empty-state>
+        class="md-accent"
+        md-icon="search_off"
+        md-label="Orari non disponibili"
+        md-description="Oggi non passa nessun autobus su questa linea."
+      ></md-empty-state>
     </div>
 
-    <md-list class="md-layout-item md-size-50 md-small-size-80 md-xsmall-size-100">
+    <md-list class="md-layout-item md-size-60 md-small-size-80 md-xsmall-size-90">
       <div v-for="(id,n) in idFermate" :key="n">
         <!--FERMATA DOVE PASSA IL BUS-->
         <!--passa se orari[n] != '' -->
@@ -96,7 +98,10 @@
             <div class="md-list-item-text">
               <span class="testoDisattivato">{{nomeFermate[n]}}</span>
             </div>
-            <md-icon  class="iconaDisattivata" v-if="ritornaAccessibile(accessibilita,n) ==1">accessible</md-icon>
+            <md-icon
+              class="iconaDisattivata"
+              v-if="ritornaAccessibile(accessibilita,n) ==1"
+            >accessible</md-icon>
           </md-list-item>
         </div>
         <md-divider></md-divider>
@@ -142,10 +147,11 @@ export default {
     orariPartenzaLinea: [],
     selezionato: 0, //all'inizio mostro la prima trip
     preferito: false,
-    mostra:true,
+    mostra: true,
     showSBadd: false,
     showSBremove: false,
-    testoSnackbar: ""
+    testoSnackbar: "",
+    caricamento: true
   }),
 
   created: function() {
@@ -155,7 +161,7 @@ export default {
         this.idRoutes = "01A";
         break;
       case "1R":
-        this.idRoutes = "01R"; 
+        this.idRoutes = "01R";
         break;
       case "02":
         this.idRoutes = "02C";
@@ -199,18 +205,18 @@ export default {
         this.nomeFermate = results.data.stopNames;
         //la posizione di results.data.trips è l'array di trips
         this.viaggi = results.data.trips;
+        this.caricamento = false;
         //all'avvio carico di default gli orari del primo viaggio
         this.orari = this.viaggi[0].stopTimes;
-        //console.log(this.orari);
+        
         this.caricoArraySelect(this.viaggi);
       })
       .catch(error => {
         console.error(error);
-        // orari non disponibili perchè l'array è vuoto
+        // orari non disponibili perchè l'array è vuoto oppure l'id è inesistente
         this.orariNonDisponibili = true;
-        this.mostra=false;
-        //this.isButtonSuccessivoDisabled = true;
-        //this.isButtonPrecedenteDisabled = true;
+        this.mostra = false;
+        this.caricamento=false;
       });
 
     Functions.getLineaSingolaAccessibilita(this.idAgency, this.idRoutes)
@@ -337,20 +343,18 @@ export default {
         this.isButtonPrecedenteDisabled = false;
       }
 
-      if(this.current != 0 && this.current != this.viaggi.length - 1){
+      if (this.current != 0 && this.current != this.viaggi.length - 1) {
         this.isButtonSuccessivoDisabled = false;
         this.isButtonPrecedenteDisabled = false;
       }
-
     }
   }
 };
 </script>
 
 <style scoped>
-
-.iconaDisattivata, .testoDisattivato {
+.iconaDisattivata,
+.testoDisattivato {
   color: lightgray !important;
 }
-
 </style>
