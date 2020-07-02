@@ -1,18 +1,21 @@
 <template>
   <div class="md-layout md-gutter md-alignment-center-center">
-    <div class="md-layout-item md-layout md-alignment-center-center md-size-100">
+    <div class="md-layout-item md-layout md-alignment-center-center md-size-90">
+      <!-- Tabs per differenziare andata e ritorno -->
       <md-tabs v-model="valoreAR" md-alignment="fixed">
         <md-tab id="tab-andata" md-label="ANDATA" @click="valoreAR = false"></md-tab>
         <md-tab id="tab-ritorno" md-label="RITORNO" @click="valoreAR = true"></md-tab>
       </md-tabs>
+
+      <!-- Spinner di caricamento  -->
       <div class="md-layout-item md-size-5">
-        <br/>
+        <br />
         <md-progress-spinner md-mode="indeterminate" v-show="activeSpinner"></md-progress-spinner>
       </div>
     </div>
 
     <!-- Lista delle linee, che selezionando passa a linea singola l'id della linea e il long name -->
-    <md-list class="md-double-line md-layout-item md-size-50 md-xsmall-size-100">
+    <md-list class="md-double-line md-layout-item md-size-60 md-small-size-80 md-xsmall-size-90">
       <div v-for="(linea, i) in linee" :key="linea.id.id" v-bind:class="sceltaAR(linea.id.id)">
         <md-list-item
           :to="'/lineaSingola/' + linea.id.id + '?routeLongName='  + linea.routeLongName"
@@ -47,13 +50,14 @@
       </div>
     </md-list>
 
+<!-- Snackbar per informare l'utente che la linea è stata aggiunta ai preferiti -->
     <md-snackbar :md-active.sync="showSBadd" md-persistent>
       <span>
         La
         <b>linea {{testoSnackbar}}</b> è stata aggiunta ai preferiti.
       </span>
     </md-snackbar>
-
+<!-- Snackbar per informare l'utente che la linea è stata rimossa dai preferiti -->
     <md-snackbar :md-active.sync="showSBremove" md-persistent>
       <span>
         La
@@ -85,7 +89,7 @@ export default {
       this.addFavoriteField(this.linee);
       //si può aggiungere una linea nei preferiti solo se è stato fatto l'accesso
       if (Accesso.isLoggedIn()) this.setFavorite(this.linee);
-      this.activeSpinner= false;
+      this.activeSpinner = false;
     });
   },
 
@@ -107,7 +111,7 @@ export default {
           let elementoPreferito = linee.find(
             linea => linea.id.id == lineePreferite[i2].idLinea
           );
-            this.$set(elementoPreferito, "preferiti", 1);
+          this.$set(elementoPreferito, "preferiti", 1);
         }
       });
     },
