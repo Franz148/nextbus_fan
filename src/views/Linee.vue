@@ -5,6 +5,9 @@
         <md-tab id="tab-andata" md-label="ANDATA" @click="valoreAR = false"></md-tab>
         <md-tab id="tab-ritorno" md-label="RITORNO" @click="valoreAR = true"></md-tab>
       </md-tabs>
+      <div class="md-layout-item md-size-5">
+       <br/> <md-progress-spinner md-mode="indeterminate" v-show="activeSpinner"></md-progress-spinner>
+      </div>
     </div>
 
     <!-- Lista delle linee, che selezionando passa a linea singola l'id della linea e il long name -->
@@ -71,7 +74,8 @@ export default {
     valoreAR: false,
     testoSnackbar: "",
     showSBadd: false,
-    showSBremove: false
+    showSBremove: false,
+    activeSpinner: true
   }),
   created: function() {
     Functions.getLinee(12).then(results => {
@@ -80,8 +84,13 @@ export default {
       this.addFavoriteField(this.linee);
       //si può aggiungere una linea nei preferiti solo se è stato fatto l'accesso
       if (Accesso.isLoggedIn()) this.setFavorite(this.linee);
-      console.log(this.linee);
     });
+
+    //   axios.all ([getLinee, getPreferiti]).then(
+    //   axios.spread((...responses) => {
+    //   this.linee= responses[0].data;
+    //  this.lineePreferite = responses [1];
+    //  this.activeSpinner= false;
   },
 
   methods: {
