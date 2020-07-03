@@ -7,6 +7,7 @@ import Viaggio from "../views/Viaggio.vue";
 
 import Linee from "../views/Linee.vue";
 import Preferiti from "../views/Preferiti.vue";
+import Tariffe from "../views/Tariffe.vue";
 import Accesso from "../views/Accesso.vue";
 
 //fermata singola prova
@@ -27,6 +28,7 @@ const routes = [{
     { path: "/", redirect: "/pianifica" },
     { path: "/linee", component: Linee },
     { path: "/preferiti", component: Preferiti },
+    { path: "/tariffe", component: Tariffe },
     { path: "/lineaSingola/:id", component: LineaSingola },
     { path: "/accesso", component: Accesso }
 ];

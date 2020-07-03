@@ -8,7 +8,7 @@
       </md-tabs>
 
       <!-- Spinner di caricamento  -->
-      <div class="md-layout-item md-size-5">
+      <div class="md-layout-item md-size-10">
         <br />
         <md-progress-spinner md-mode="indeterminate" v-show="activeSpinner"></md-progress-spinner>
       </div>
@@ -22,7 +22,7 @@
         >
           <!-- Avatar che prende dalla cartella assets/iconeLinee chiamate come l'id delle linee a cui appartengono -->
           <md-avatar>
-            <img :src="getImageFromId(linea.id.id)" />
+            <img :src="getImageFromId(linea.id.id)"/>
           </md-avatar>
           <div class="md-list-item-text">
             <span>{{linea.routeLongName}}</span>
@@ -50,14 +50,14 @@
       </div>
     </md-list>
 
-<!-- Snackbar per informare l'utente che la linea è stata aggiunta ai preferiti -->
+    <!-- Snackbar per informare l'utente che la linea è stata aggiunta ai preferiti -->
     <md-snackbar :md-active.sync="showSBadd" md-persistent>
       <span>
         La
         <b>linea {{testoSnackbar}}</b> è stata aggiunta ai preferiti.
       </span>
     </md-snackbar>
-<!-- Snackbar per informare l'utente che la linea è stata rimossa dai preferiti -->
+    <!-- Snackbar per informare l'utente che la linea è stata rimossa dai preferiti -->
     <md-snackbar :md-active.sync="showSBremove" md-persistent>
       <span>
         La
@@ -156,7 +156,6 @@ export default {
     //funzione che ordina in ordine alfabetico dell'id le linee
     //creo variabile temporanea per cambio id di 1 con 01 così è il primo della lista
     ordinaLinee() {
-      console.log(this.linee);
       let confronta = (a, b) => {
         let tmpB = b.id.id.toUpperCase();
 
@@ -178,7 +177,6 @@ export default {
         return comparison;
       };
       this.linee.sort(confronta);
-      console.log(this.linee);
     }
   }
 };

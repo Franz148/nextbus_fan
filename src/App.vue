@@ -25,6 +25,7 @@
             <md-tab id="tab-pianifica" md-icon="explore" md-label="Pianifica" to="/pianifica"></md-tab>
             <md-tab id="tab-linee" md-icon="timeline" md-label="Linee" to="/linee"></md-tab>
             <md-tab id="tab-preferiti" md-icon="favorite" md-label="Preferiti" to="/preferiti"></md-tab>
+            <md-tab id="tab-tariffe" md-icon="confirmation_number" md-label="Tariffe" to="/tariffe"></md-tab>
           </md-tabs>
         </div>
       </md-app-toolbar>
