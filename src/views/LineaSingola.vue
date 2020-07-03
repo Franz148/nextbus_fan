@@ -69,13 +69,13 @@
 
     <!-- SPINNER CARICAMENTO -->
     <div class="md-layout md-layout-item md-size-100 md-alignment-center">
+      <div class="md-layout-item md-size-100"> <br />  </div>
       <md-progress-spinner md-mode="indeterminate" v-show="caricamento"></md-progress-spinner>
     </div>
 
     <!--AVVISO ORARI NON DISPONIBILI-->
     <div class="md-layout-item md-size-100" v-show="orariNonDisponibili">
       <md-empty-state
-        class="md-accent"
         md-icon="search_off"
         md-label="Orari non disponibili"
         md-description="Oggi non passa nessun autobus su questa linea."
