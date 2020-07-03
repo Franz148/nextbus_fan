@@ -2,7 +2,7 @@
   <div class="md-layout md-alignment-center-center">
     <!-- CARD -->
     <md-card class="md-layout-item md-size-60 md-small-size-80 md-xsmall-size-90">
-      <md-card-header class="md-layout md-gutter md-alignment-center">
+      <md-card-header class="md-layout md-gutter md-alignment-center-space-between">
         <!-- avatar linea -->
         <div class="md-layout-item md-size-15 md-xsmall-size-25">
           <md-avatar>
@@ -10,7 +10,7 @@
           </md-avatar>
         </div>
         <!-- nome linea -->
-        <div class="md-layout-item md-size-70 md-xsmall-size-80">
+        <div class="md-layout-item md-size-70 md-xsmall-size-80 md-xsmall-hide">
           <div class="md-title">{{$route.query.routeLongName}}</div>
         </div>
         <!-- preferiti -->
@@ -366,4 +366,5 @@ export default {
 .testoDisattivato {
   color: lightgray !important;
 }
+
 </style>
