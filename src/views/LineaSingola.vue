@@ -5,9 +5,23 @@
       <md-card-header class="md-layout md-gutter md-alignment-center-space-between">
         <!-- avatar linea -->
         <div class="md-layout-item md-size-15 md-xsmall-size-25">
-          <md-avatar>
-            <img :src="getImageFromId($route.params.id)" />
-          </md-avatar>
+          <md-menu>
+            <md-button class="md-icon-button" v-bind:disabled="disabilitaCambioAR" md-menu-trigger>
+              <md-icon class="md-size-2x">
+                <img :src="getImageFromId($route.params.id)" />
+              </md-icon>
+            </md-button>
+
+            <md-menu-content>
+              <md-menu-item @click="cambioAR($route.params.id)">
+                <md-icon>compare_arrows
+                  <!-- <img :src="getImageFromId($route.params.id)" /> -->
+                  <!--  -->
+                </md-icon>
+                <span>Cambia direzione</span>
+              </md-menu-item>
+            </md-menu-content>
+          </md-menu>
         </div>
         <!-- nome linea -->
         <div class="md-layout-item md-size-70 md-xsmall-size-80 md-xsmall-hide">
@@ -32,7 +46,7 @@
           </md-button>
         </div>
       </md-card-header>
-      
+
       <md-card-expand v-show="mostra">
         <md-card-actions class="md-layout md-gutter">
           <!-- precedente -->
@@ -69,7 +83,9 @@
 
     <!-- SPINNER CARICAMENTO -->
     <div class="md-layout md-layout-item md-size-100 md-alignment-center">
-      <div class="md-layout-item md-size-100"> <br />  </div>
+      <div class="md-layout-item md-size-100">
+        <br />
+      </div>
       <md-progress-spinner md-mode="indeterminate" v-show="caricamento"></md-progress-spinner>
     </div>
 
@@ -159,7 +175,9 @@ export default {
     showSBadd: false,
     showSBremove: false,
     testoSnackbar: "",
-    caricamento: true
+    caricamento: true,
+    disabilitaCambioAR:false
+    
   }),
 
   created: function() {
@@ -173,6 +191,7 @@ export default {
         break;
       case "02":
         this.idRoutes = "02C";
+        this.disabilitaCambioAR=true;
         break;
       case "_A":
         this.idRoutes = "%20AC"; //NON VA
@@ -230,6 +249,7 @@ export default {
     Functions.getLineaSingolaAccessibilita(this.idAgency, this.idRoutes)
       .then(results2 => {
         this.accessibilita = results2.data;
+        
       })
       .catch(error => {
         console.error(error);
@@ -238,7 +258,6 @@ export default {
   methods: {
     //ricambio l'id per le immagini degli avatar e le prendo dal DB
     getImageFromId(id) {
-      
       return require("../assets/iconeLinee/" + id + ".png");
     },
 
@@ -288,6 +307,29 @@ export default {
       this.orari = this.viaggi[this.current].stopTimes;
       this.selezionato = this.current;
     },
+    cambioAR(id) {
+      var idCambiato;
+
+      if(id.indexOf("A") != -1){
+        idCambiato = id.replace("A", "R");
+
+      }
+      else
+      {
+        idCambiato = id.replace("R", "A");
+
+      }
+      console.log(idCambiato);
+      this.$router.replace({
+        params: {
+          id: idCambiato
+        },
+        query: {
+          routeLongName: this.$route.query.routeLongName
+        }
+      });
+      this.$router.go();
+    },
 
     addFavoriteLine(id, preferiti) {
       //aggiunge ai preferiti la linea visualizzata solo se è stato eseguito l'accesso
@@ -312,7 +354,7 @@ export default {
 
   watch: {
     selezionato: function() {
-      //controllo il cambiamento della trip selezionata dal select o da precedente e successivo 
+      //controllo il cambiamento della trip selezionata dal select o da precedente e successivo
       this.current = this.selezionato;
       this.orari = this.viaggi[this.current].stopTimes;
       if (this.current == 0) {
@@ -338,5 +380,8 @@ export default {
 .testoDisattivato {
   color: lightgray !important;
 }
-
+/* img{
+  height: 40px !important;
+  width: 40px !important;
+} */
 </style>
