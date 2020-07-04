@@ -6,7 +6,7 @@
         <!-- avatar linea -->
         <div class="md-layout-item md-size-15 md-xsmall-size-25">
           <md-avatar>
-            <img :src="getImageFromId(idRoutes)" />
+            <img :src="getImageFromId($route.params.id)" />
           </md-avatar>
         </div>
         <!-- nome linea -->
@@ -17,7 +17,7 @@
         <div class="md-layout-item md-size-15 md-xsmall-size-20">
           <md-button
             class="md-icon-button"
-            @click.stop.prevent="addFavoriteLine(idRoutes, preferito)"
+            @click.stop.prevent="addFavoriteLine($route.params.id, preferito)"
             v-if="!preferito"
           >
             <md-icon>favorite_border</md-icon>
@@ -25,7 +25,7 @@
 
           <md-button
             class="md-icon-button md-primary"
-            @click.stop.prevent="addFavoriteLine(idRoutes, preferito)"
+            @click.stop.prevent="addFavoriteLine($route.params.id, preferito)"
             v-if="preferito"
           >
             <md-icon>favorite</md-icon>
@@ -198,7 +198,7 @@ export default {
     }
     //controllo se è stato fatto il login
     if (Accesso.isLoggedIn()) {
-      DBFunction.getLineaSingolaPreferita(this.idRoutes)
+      DBFunction.getLineaSingolaPreferita(this.$route.params.id)
         .then(results3 => {
           if (results3.length != 0) this.preferito = true;
         })
@@ -238,35 +238,7 @@ export default {
   methods: {
     //ricambio l'id per le immagini degli avatar e le prendo dal DB
     getImageFromId(id) {
-      switch (id) {
-        case "01A":
-          id = "1A";
-          break;
-        case "01R":
-          id = "1R";
-          break;
-        case "02C":
-          id = "02";
-          break;
-        case "%20AC":
-          id = "_A";
-          break;
-        case "FunR":
-          id = "FUTSR";
-          break;
-        case "FunA":
-          id = "FUTSA";
-          break;
-        case "%20GR":
-          id = "GR";
-          break;
-        case "%20GA":
-          id = "GA";
-          break;
-        case "NPC":
-          id = "NPA";
-          break;
-      }
+      
       return require("../assets/iconeLinee/" + id + ".png");
     },
 
