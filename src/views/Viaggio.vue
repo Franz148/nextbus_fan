@@ -90,9 +90,10 @@
 </template>
 
 <script>
+import format from "date-fns/format";
 import Accesso from "../login/access-functions.js";
 import Functions from "../api/functions.js";
-import dbFunctions from '../database/db-functions';
+import dbFunctions from "../database/db-functions";
 var _ = require("lodash");
 
 export default {
@@ -159,7 +160,6 @@ export default {
 
     ordinaRisultati() {
       let confronta = (a, b) => {
-
         const ricercaA = a.endtime;
         const ricercaB = b.endtime;
 
@@ -170,7 +170,7 @@ export default {
         } else if (ricercaA < ricercaB) {
           comparison = -1;
         }
-        
+
         return comparison;
       };
 
@@ -180,7 +180,13 @@ export default {
     loadViaggio() {
       this.indirizzoP = this.$route.query.indirizzoP;
       this.indirizzoA = this.$route.query.indirizzoA;
-      this.dataPartenza = this.$route.query.dataPartenza;
+
+      let tmpDate = this.$route.query.dataPartenza.split("/");
+      this.dataPartenza = format(
+        new Date(tmpDate[2], tmpDate[1] - 1, tmpDate[0]),
+        "MM/dd/yyyy"
+      );
+
       this.oraPartenza = this.tConvert(this.$route.query.oraPartenza);
 
       Functions.pianificaViaggio(
@@ -199,8 +205,13 @@ export default {
           if (results.data.length != 0) {
             this.zeroRisultati = false;
 
-            if(Accesso.isLoggedIn()){
-              dbFunctions.salvaUltimaRicerca(this.indirizzoA, this.indirizzoP, this.dataPartenza, this.$route.query.oraPartenza);
+            if (Accesso.isLoggedIn()) {
+              dbFunctions.salvaUltimaRicerca(
+                this.indirizzoA,
+                this.indirizzoP,
+                this.$route.query.dataPartenza,
+                this.$route.query.oraPartenza
+              );
             }
           }
         })

@@ -164,7 +164,7 @@ export default {
     form: {
       indirizzoP: null,
       indirizzoA: null,
-      dataPartenza: format(new Date(), "MM/dd/yyyy"),
+      dataPartenza: format(new Date(), "dd/MM/yyyy"),
       oraPartenza: format(new Date(), "HH:mm")
     },
     userSaved: false,
@@ -266,13 +266,13 @@ export default {
 
       this.form.indirizzoP = null;
       this.form.indirizzoA = null;
-      this.form.dataPartenza = format(new Date(), "MM/dd/yyyy");
+      this.form.dataPartenza = format(new Date(), "dd/MM/yyyy");
       this.form.oraPartenza = format(new Date(), "HH:mm");
-
-      this.$router.push("/pianifica");
-
+      
       this.sending = false;
       this.activeUltimeRicerche = true;
+
+      this.$router.push("/pianifica");
     },
     submit() {
       this.$v.$touch();
