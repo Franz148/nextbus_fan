@@ -157,6 +157,26 @@ export default {
       return time.join(""); // return adjusted time or original string
     },
 
+    ordinaRisultati() {
+      let confronta = (a, b) => {
+
+        const ricercaA = a.endtime;
+        const ricercaB = b.endtime;
+
+        let comparison = 0;
+
+        if (ricercaA > ricercaB) {
+          comparison = 1;
+        } else if (ricercaA < ricercaB) {
+          comparison = -1;
+        }
+        
+        return comparison;
+      };
+
+      this.risultati.sort(confronta);
+    },
+
     loadViaggio() {
       this.indirizzoP = this.$route.query.indirizzoP;
       this.indirizzoA = this.$route.query.indirizzoA;
@@ -173,6 +193,7 @@ export default {
           this.activeSpinner = false;
 
           this.risultati = results.data;
+          this.ordinaRisultati();
 
           if (results.data.length == 0) this.zeroRisultati = true;
           if (results.data.length != 0) {
