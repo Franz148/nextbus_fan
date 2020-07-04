@@ -37,6 +37,7 @@
 </template>
 
 <style>
+
 .md-app-toolbar {
   z-index: 900 !important;
 }
