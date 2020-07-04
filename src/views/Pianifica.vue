@@ -30,6 +30,16 @@
               </md-field>
             </div>
 
+            <div class="md-layout-item md-size-100 md-layout md-alignment-center-right">
+              <md-button
+                class="md-icon-button md-raised md-accent"
+                @click="swapText()"
+                :disabled="form.indirizzoA == null || form.indirizzoA == '' || form.indirizzoP == null || form.indirizzoP == '' "
+              >
+                <md-icon>swap_vert</md-icon>
+              </md-button>
+            </div>
+
             <div class="md-layout-item md-size-100">
               <label class="md-subheading">Arrivo</label>
               <md-field :class="getValidationClass('indirizzoA')">
@@ -48,7 +58,7 @@
             </div>
 
             <div class="md-layout-item md-size-100 md-layout md-alignment-center-space-between">
-              <label class="md-subheading md-layout-item md-size-100">Data e ora della partenza 🚌</label>
+              <label class="md-subheading md-layout-item md-size-100">Data e ora della partenza</label>
               <div class="md-layout-item md-size-50 md-xsmall-size-100">
                 <md-datepicker
                   v-model="form.dataPartenza"
@@ -69,6 +79,7 @@
                 class="md-layout-item md-size-40 md-layout md-alignment-center-center md-xsmall-size-100"
               >
                 <md-field :class="getValidationClass('oraPartenza')">
+                  <label>Seleziona l'ora (hh:mm)</label>
                   <md-input type="time" v-model="form.oraPartenza" />
                   <span
                     class="md-error"
@@ -94,8 +105,42 @@
       </md-card>
     </form>
 
+    <md-card
+      class="md-layout-item md-size-35 md-small-size-80 md-xsmall-size-90 margin-mobile"
+      v-if="checkAutenticazione() && activeUltimeRicerche"
+    >
+      <md-card-header>
+        <div class="md-title">Ultime ricerche</div>
+      </md-card-header>
+
+      <md-card-content class="md-layout md-alignment-center-center">
+        <div class="md-layout-item md-size-5">
+          <md-progress-spinner md-mode="indeterminate" v-show="activeSpinner"></md-progress-spinner>
+        </div>
+
+        <md-list class="md-triple-line md-layout-item md-size-100">
+          <div v-for="(elemento, i) in arrayUltimeRicerche" :key="i">
+            <md-list-item>
+              <md-icon class="md-primary">history</md-icon>
+
+              <div class="md-list-item-text">
+                <span>Partenza: {{elemento.indirizzoPartenza}}</span>
+                <span>Arrivo: {{elemento.indirizzoArrivo}}</span>
+                <span>Data: {{elemento.dataPartenza}} | Ora: {{elemento.oraPartenza}}</span>
+              </div>
+
+              <md-button class="md-icon-button md-list-action" @click="ricerca(elemento)">
+                <md-icon>search</md-icon>
+              </md-button>
+            </md-list-item>
+            <md-divider></md-divider>
+          </div>
+        </md-list>
+      </md-card-content>
+    </md-card>
+
     <div
-      class="md-layout-item md-small-size-80 ms-xsmall-size-90 bodySecond"
+      class="md-layout-item md-small-size-80 ms-xsmall-size-90 margin-mobile"
       :class="{'md-size-50': sending, 'md-size-100': !sending}"
     >
       <router-view></router-view>
@@ -105,6 +150,9 @@
 
 <script>
 import format from "date-fns/format";
+import Accesso from "../login/access-functions.js";
+import Dbfunction from "../database/db-functions.js";
+
 var _ = require("lodash");
 
 import { validationMixin } from "vuelidate";
@@ -117,11 +165,13 @@ export default {
       indirizzoP: null,
       indirizzoA: null,
       dataPartenza: format(new Date(), "MM/dd/yyyy"),
-      oraPartenza: null
+      oraPartenza: format(new Date(), "HH:mm")
     },
     userSaved: false,
     sending: false,
-    lastUser: null
+    activeUltimeRicerche: true,
+    arrayUltimeRicerche: [],
+    activeSpinner: true
   }),
   validations: {
     form: {
@@ -141,7 +191,67 @@ export default {
       }
     }
   },
+
+  created: function() {
+    this.caricaUltimeRicerche();
+  },
+
   methods: {
+    caricaUltimeRicerche() {
+      if (this.checkAutenticazione()) {
+        Dbfunction.getUltimeRicerche().then(results => {
+          this.arrayUltimeRicerche = results;
+          this.ordinaRicerche();
+
+          if (this.arrayUltimeRicerche.length == 0)
+            this.activeUltimeRicerche = false;
+
+          this.activeSpinner = false;
+        });
+      }
+    },
+
+    ricerca(elemento) {
+      this.form.indirizzoP = elemento.indirizzoPartenza;
+      this.form.indirizzoA = elemento.indirizzoArrivo;
+      this.form.dataPartenza = elemento.dataPartenza;
+      this.form.oraPartenza = elemento.oraPartenza;
+
+      let queryParams = {
+        indirizzoP: elemento.indirizzoPartenza,
+        indirizzoA: elemento.indirizzoArrivo,
+        dataPartenza: elemento.dataPartenza,
+        oraPartenza: elemento.oraPartenza
+      };
+
+      this.sending = true;
+
+      this.$router.push({
+        path: "/pianifica/viaggio",
+        query: Object.assign({}, this.$route.query, queryParams)
+      });
+    },
+
+    ordinaRicerche() {
+      let confronta = (a, b) => {
+
+        const ricercaA = a.timestamp;
+        const ricercaB = b.timestamp;
+
+        let comparison = 0;
+
+        if (ricercaA > ricercaB) {
+          comparison = -1;
+        } else if (ricercaA < ricercaB) {
+          comparison = 1;
+        }
+        
+        return comparison;
+      };
+
+      this.arrayUltimeRicerche.sort(confronta);
+    },
+
     getValidationClass(fieldName) {
       const field = this.$v.form[fieldName];
 
@@ -153,14 +263,16 @@ export default {
     },
     clearForm() {
       this.$v.$reset();
+
       this.form.indirizzoP = null;
       this.form.indirizzoA = null;
       this.form.dataPartenza = format(new Date(), "MM/dd/yyyy");
-      this.form.indirizzoP = null;
-
-      this.sending = false;
+      this.form.oraPartenza = format(new Date(), "HH:mm");
 
       this.$router.push("/pianifica");
+
+      this.sending = false;
+      this.activeUltimeRicerche = true;
     },
     submit() {
       this.$v.$touch();
@@ -180,6 +292,18 @@ export default {
           query: Object.assign({}, this.$route.query, queryParams)
         });
       }
+    },
+
+    swapText() {
+      if (this.form.indirizzoA != "" && this.form.indirizzoP != "") {
+        let tmp = this.form.indirizzoP;
+        this.form.indirizzoP = this.form.indirizzoA;
+        this.form.indirizzoA = tmp;
+      }
+    },
+
+    checkAutenticazione() {
+      return Accesso.isLoggedIn();
     }
   },
 
@@ -188,6 +312,10 @@ export default {
       if (_.isEmpty(from.query)) {
         this.sending = false;
       }
+
+      this.activeUltimeRicerche = false;
+
+      this.caricaUltimeRicerche();
     }
   }
 };
@@ -195,7 +323,7 @@ export default {
 
 <style scoped>
 @media only screen and (max-width: 960px) {
-  .bodySecond {
+  .margin-mobile {
     margin-top: 30px;
   }
 }
