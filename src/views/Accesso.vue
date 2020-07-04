@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- Gestione accesso -->
+    <!-- DIALOG PER L'ACCESSO CON UNICO INSERIMENTO PER LO USERNAME -->
     <md-dialog-prompt
       :md-active.sync="activeDialog"
       v-model="inserimentoNomeUtente"
@@ -23,11 +23,14 @@ export default {
     activeDialog: true,
     inserimentoNomeUtente: ""
   }),
+  
   methods: {
+    //REGISTRO SUL BROWSER LO USERNAME E TORNO ALLA PRECEDENTE PER FAR PROSEGUIRE L'UTENTE
     login() {
       Accesso.login(this.inserimentoNomeUtente);
       this.$router.go(-1);
     },
+
     annulla(){
         this.$router.go(-1);
     }
