@@ -4,19 +4,23 @@ import "@firebase/storage";
 
 import Accesso from "../login/access-functions.js";
 
+//CONFIGURAZIONE DATABASE
 const firebaseConfig = {
     apiKey: "AIzaSyDlmXCeXTgEEgjlQJ1fRUJGITc1ujPlW7g",
     authDomain: "nextbus-38e73.firebaseapp.com",
     projectId: "nextbus-38e73"
 };
 
+//INIZIALIZZAZIONE
 firebase.initializeApp(firebaseConfig);
 
+//VARIABILI PER ACCESSO AL DB E ALLE DIFFERENTI COLLEZIONI
 var db = firebase.firestore();
 var elementiPreferiti = db.collection("elementiPreferiti");
 var ultimeRicerche = db.collection("ultimeRicerche");
 
 export default {
+    //RESTITUISCE LE LINEE INSERITE NEI PREFERITI PER UNO SPECIFICO UTENTE
     getLineePreferite() {
         var user = Accesso.getUsername().toLowerCase();
         var arrayLinee = [];
@@ -33,6 +37,8 @@ export default {
                 return arrayLinee;
             });
     },
+
+    //REGISTRA SUL DATABASE UNA NUOVA LINEA PREFERITA PER UNO SPECIFICO UTENTE
     setLineaPreferita(idLinea) {
         var user = Accesso.getUsername().toLowerCase();
         return elementiPreferiti
@@ -42,8 +48,12 @@ export default {
                 username: user
             });
     },
+
+    //RIMUOVE DAL DATABASE UNA LINEA PREFERITA SPECIFICA PER UNO SPECIFICO UTENTE
     rimuoviLineaPreferita(idLinea) {
         var user = Accesso.getUsername().toLowerCase();
+
+        //Ricerca dell'elemento e poi eliminazione
         return elementiPreferiti
             .where("idLinea", "==", idLinea)
             .where("username", "==", user)
@@ -54,6 +64,8 @@ export default {
                 });
             });
     },
+
+    //RESTITUISCE UN ARRAY CHE RAPPRESENTA LA LINEA PREFERITA (ARRAY CON UN SOLO ELEMENTO)
     getLineaSingolaPreferita(idLinea) {
         var user = Accesso.getUsername().toLowerCase();
         var arrayLinee = [];
@@ -63,6 +75,8 @@ export default {
             .where("username", "==", user)
             .get()
             .then(results => {
+
+                //Si scorrono tutti i risultati anche se si ipotizza che possa essere solo uno
                 results.forEach(doc => {
                     arrayLinee.push(doc.data());
                 });
@@ -70,6 +84,7 @@ export default {
             });
     },
 
+    //REGISTRA SUL DATABASE L'ULTIMA RICERCA EFFETTUATA DA UNO SPECIFICO UTENTE FACENDO UNA SERIE DI CONTROLLI (N. MAX DI RICERCHE E DUPLICAZIONE RICERCA)
     salvaUltimaRicerca(arrivo, partenza, data, ora) {
         var user = Accesso.getUsername().toLowerCase();
 
@@ -77,24 +92,30 @@ export default {
             .where("username", "==", user)
             .get()
             .then(results => {
+                //Rappresenta il numero di ricerche già salvate nel DB
                 let i = 0;
+
+                //Rappresenta la presenza o meno di elementi identici nel DB
                 let i2 = 0;
+
+                //Variabile necessaria a verificare quale elemento del DB è il meno recente
                 let ultimoTimestamp = Date.now() + "";
 
                 results.forEach((item) => {
+
+                    //Volta per volta salvo il timestamp meno recente 
                     if (item.data().timestamp < ultimoTimestamp)
                         ultimoTimestamp = item.data().timestamp;
 
-
-                    if (item.data().indirizzoArrivo == arrivo &&
-                        item.data().indirizzoPartenza == partenza
-                    )
+                    //Se ci sono duplicati incremento la variabile i2 (controllo solo indirizzo di partenza e arrivo)
+                    if (item.data().indirizzoArrivo == arrivo && item.data().indirizzoPartenza == partenza)
                         i2++;
 
-
+                    //Tengo conto del numero di risultati
                     i++;
                 });
 
+                //Se sono arrivato ad un massimo di 5 risultati per utente, cancello quello meno recente
                 if (i >= 5) {
                     ultimeRicerche
                         .where("timestamp", "==", ultimoTimestamp)
@@ -107,8 +128,8 @@ export default {
                         });
                 }
 
+                //Se non trovo duplicati, salvo la ricerca con il timestamp e lo username
                 if (i2 == 0) {
-
                     ultimeRicerche
                         .add({
                             dataPartenza: data,
@@ -119,10 +140,10 @@ export default {
                             username: user
                         });
                 }
-
             });
     },
 
+    //RESTITUISCE LE ULTIME RICERCHE DI UNO SPECIFICO UTENTE
     getUltimeRicerche() {
         var user = Accesso.getUsername().toLowerCase();
 
