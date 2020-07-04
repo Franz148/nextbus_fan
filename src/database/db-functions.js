@@ -22,6 +22,8 @@ var ultimeRicerche = db.collection("ultimeRicerche");
 export default {
     //RESTITUISCE LE LINEE INSERITE NEI PREFERITI PER UNO SPECIFICO UTENTE
     getLineePreferite() {
+
+        //Per prevenire errori lo username nel DB viene salvato sempre in minuscolo
         var user = Accesso.getUsername().toLowerCase();
         var arrayLinee = [];
 
