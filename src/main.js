@@ -4,15 +4,15 @@ import router from "./router";
 import VueMaterial from "vue-material";
 import 'vue-material/dist/vue-material.min.css'
 
-//File per tema custom
+//FILE PER TEMA CUSTOM
 import "./style/custom-theme.scss";
 
 Vue.config.productionTip = false;
 
 Vue.use(VueMaterial);
 
-//Global configuration
-Vue.material.locale.dateFormat = "MM/dd/yyyy";
+//GLOBAL CONFIGURATION
+Vue.material.locale.dateFormat = "dd/MM/yyyy";
 Vue.material.locale.firstDayOfAWeek = 1;
 
 new Vue({
