@@ -14,6 +14,7 @@ firebase.initializeApp(firebaseConfig);
 
 var db = firebase.firestore();
 var elementiPreferiti = db.collection("elementiPreferiti");
+var ultimeRicerche = db.collection("ultimeRicerche");
 
 export default {
     getLineePreferite() {
@@ -56,6 +57,7 @@ export default {
     getLineaSingolaPreferita(idLinea) {
         var user = Accesso.getUsername().toLowerCase();
         var arrayLinee = [];
+
         return elementiPreferiti
             .where("idLinea", "==", idLinea)
             .where("username", "==", user)
@@ -65,6 +67,65 @@ export default {
                     arrayLinee.push(doc.data());
                 });
                 return arrayLinee;
+            });
+    },
+
+    salvaUltimaRicerca(arrivo, partenza, data, ora) {
+        var user = Accesso.getUsername().toLowerCase();
+
+        ultimeRicerche
+            .where("username", "==", user)
+            .get()
+            .then(results => {
+                let i = 0;
+                let ultimoTimestamp = Date.now() + "";
+
+                results.forEach((item) => {
+                    if (item.data().timestamp < ultimoTimestamp)
+                        ultimoTimestamp = item.data().timestamp;
+
+                    i++;
+                });
+
+                if (i >= 5) {
+                    ultimeRicerche
+                        .where("timestamp", "==", ultimoTimestamp)
+                        .where("username", "==", user)
+                        .get()
+                        .then(results => {
+                            results.forEach(doc => {
+                                ultimeRicerche.doc(doc.id).delete();
+                            });
+                        });
+                }
+
+                ultimeRicerche
+                    .add({
+                        dataPartenza: data,
+                        indirizzoArrivo: arrivo,
+                        indirizzoPartenza: partenza,
+                        oraPartenza: ora,
+                        timestamp: Date.now(),
+                        username: user
+                    });
+
+            });
+    },
+
+    getUltimeRicerche() {
+        var user = Accesso.getUsername().toLowerCase();
+
+        return ultimeRicerche
+            .where("username", "==", user)
+            .get()
+            .then(results => {
+                let aResults = [];
+
+                results.forEach((item) => {
+                    aResults.push(item.data());
+                });
+
+                return aResults;
             });
     }
 }
