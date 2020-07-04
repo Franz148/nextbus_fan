@@ -78,11 +78,19 @@ export default {
             .get()
             .then(results => {
                 let i = 0;
+                let i2 = 0;
                 let ultimoTimestamp = Date.now() + "";
 
                 results.forEach((item) => {
                     if (item.data().timestamp < ultimoTimestamp)
                         ultimoTimestamp = item.data().timestamp;
+
+
+                    if (item.data().indirizzoArrivo == arrivo &&
+                        item.data().indirizzoPartenza == partenza
+                    )
+                        i2++;
+
 
                     i++;
                 });
@@ -99,15 +107,18 @@ export default {
                         });
                 }
 
-                ultimeRicerche
-                    .add({
-                        dataPartenza: data,
-                        indirizzoArrivo: arrivo,
-                        indirizzoPartenza: partenza,
-                        oraPartenza: ora,
-                        timestamp: Date.now(),
-                        username: user
-                    });
+                if (i2 == 0) {
+
+                    ultimeRicerche
+                        .add({
+                            dataPartenza: data,
+                            indirizzoArrivo: arrivo,
+                            indirizzoPartenza: partenza,
+                            oraPartenza: ora,
+                            timestamp: Date.now(),
+                            username: user
+                        });
+                }
 
             });
     },
