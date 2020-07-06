@@ -15,8 +15,6 @@
             <md-menu-content>
               <md-menu-item @click="cambioAR($route.params.id)">
                 <md-icon>compare_arrows
-                  <!-- <img :src="getImageFromId($route.params.id)" /> -->
-                  <!--  -->
                 </md-icon>
                 <span>Cambia direzione</span>
               </md-menu-item>
@@ -195,6 +193,7 @@ export default {
         break;
       case "_A":
         this.idRoutes = "%20AC"; //NON VA
+        this.disabilitaCambioAR=true;
         break;
       case "FUTSR":
         this.idRoutes = "FunR";
@@ -210,6 +209,7 @@ export default {
         break;
       case "NPA":
         this.idRoutes = "NPC";
+        this.disabilitaCambioAR=true;
         break;
 
       default:
@@ -319,7 +319,6 @@ export default {
         idCambiato = id.replace("R", "A");
 
       }
-      console.log(idCambiato);
       this.$router.replace({
         params: {
           id: idCambiato
@@ -380,8 +379,5 @@ export default {
 .testoDisattivato {
   color: lightgray !important;
 }
-/* img{
-  height: 40px !important;
-  width: 40px !important;
-} */
+
 </style>
