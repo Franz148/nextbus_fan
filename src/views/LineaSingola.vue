@@ -2,22 +2,36 @@
   <div class="md-layout md-alignment-center-center">
     <!-- CARD -->
     <md-card class="md-layout-item md-size-60 md-small-size-80 md-xsmall-size-90">
-      <md-card-header class="md-layout md-gutter md-alignment-center">
+      <md-card-header class="md-layout md-gutter md-alignment-center-space-between">
         <!-- avatar linea -->
         <div class="md-layout-item md-size-15 md-xsmall-size-25">
-          <md-avatar>
-            <img :src="getImageFromId(idRoutes)" />
-          </md-avatar>
+          <md-menu>
+            <md-button class="md-icon-button" v-bind:disabled="disabilitaCambioAR" md-menu-trigger>
+              <md-icon class="md-size-2x">
+                <img :src="getImageFromId($route.params.id)" />
+              </md-icon>
+            </md-button>
+
+            <md-menu-content>
+              <md-menu-item @click="cambioAR($route.params.id)">
+                <md-icon>compare_arrows
+                  <!-- <img :src="getImageFromId($route.params.id)" /> -->
+                  <!--  -->
+                </md-icon>
+                <span>Cambia direzione</span>
+              </md-menu-item>
+            </md-menu-content>
+          </md-menu>
         </div>
         <!-- nome linea -->
-        <div class="md-layout-item md-size-70 md-xsmall-size-80">
+        <div class="md-layout-item md-size-70 md-xsmall-size-80 md-xsmall-hide">
           <div class="md-title">{{$route.query.routeLongName}}</div>
         </div>
         <!-- preferiti -->
         <div class="md-layout-item md-size-15 md-xsmall-size-20">
           <md-button
             class="md-icon-button"
-            @click.stop.prevent="addFavoriteLine(idRoutes, preferito)"
+            @click.stop.prevent="addFavoriteLine($route.params.id, preferito)"
             v-if="!preferito"
           >
             <md-icon>favorite_border</md-icon>
@@ -25,14 +39,14 @@
 
           <md-button
             class="md-icon-button md-primary"
-            @click.stop.prevent="addFavoriteLine(idRoutes, preferito)"
+            @click.stop.prevent="addFavoriteLine($route.params.id, preferito)"
             v-if="preferito"
           >
             <md-icon>favorite</md-icon>
           </md-button>
         </div>
       </md-card-header>
-      
+
       <md-card-expand v-show="mostra">
         <md-card-actions class="md-layout md-gutter">
           <!-- precedente -->
@@ -69,13 +83,15 @@
 
     <!-- SPINNER CARICAMENTO -->
     <div class="md-layout md-layout-item md-size-100 md-alignment-center">
+      <div class="md-layout-item md-size-100">
+        <br />
+      </div>
       <md-progress-spinner md-mode="indeterminate" v-show="caricamento"></md-progress-spinner>
     </div>
 
     <!--AVVISO ORARI NON DISPONIBILI-->
     <div class="md-layout-item md-size-100" v-show="orariNonDisponibili">
       <md-empty-state
-        class="md-accent"
         md-icon="search_off"
         md-label="Orari non disponibili"
         md-description="Oggi non passa nessun autobus su questa linea."
@@ -159,7 +175,9 @@ export default {
     showSBadd: false,
     showSBremove: false,
     testoSnackbar: "",
-    caricamento: true
+    caricamento: true,
+    disabilitaCambioAR:false
+    
   }),
 
   created: function() {
@@ -173,6 +191,7 @@ export default {
         break;
       case "02":
         this.idRoutes = "02C";
+        this.disabilitaCambioAR=true;
         break;
       case "_A":
         this.idRoutes = "%20AC"; //NON VA
@@ -198,7 +217,7 @@ export default {
     }
     //controllo se è stato fatto il login
     if (Accesso.isLoggedIn()) {
-      DBFunction.getLineaSingolaPreferita(this.idRoutes)
+      DBFunction.getLineaSingolaPreferita(this.$route.params.id)
         .then(results3 => {
           if (results3.length != 0) this.preferito = true;
         })
@@ -230,6 +249,7 @@ export default {
     Functions.getLineaSingolaAccessibilita(this.idAgency, this.idRoutes)
       .then(results2 => {
         this.accessibilita = results2.data;
+        
       })
       .catch(error => {
         console.error(error);
@@ -238,35 +258,6 @@ export default {
   methods: {
     //ricambio l'id per le immagini degli avatar e le prendo dal DB
     getImageFromId(id) {
-      switch (id) {
-        case "01A":
-          id = "1A";
-          break;
-        case "01R":
-          id = "1R";
-          break;
-        case "02C":
-          id = "02";
-          break;
-        case "%20AC":
-          id = "_A";
-          break;
-        case "FunR":
-          id = "FUTSR";
-          break;
-        case "FunA":
-          id = "FUTSA";
-          break;
-        case "%20GR":
-          id = "GR";
-          break;
-        case "%20GA":
-          id = "GA";
-          break;
-        case "NPC":
-          id = "NPA";
-          break;
-      }
       return require("../assets/iconeLinee/" + id + ".png");
     },
 
@@ -316,6 +307,29 @@ export default {
       this.orari = this.viaggi[this.current].stopTimes;
       this.selezionato = this.current;
     },
+    cambioAR(id) {
+      var idCambiato;
+
+      if(id.indexOf("A") != -1){
+        idCambiato = id.replace("A", "R");
+
+      }
+      else
+      {
+        idCambiato = id.replace("R", "A");
+
+      }
+      console.log(idCambiato);
+      this.$router.replace({
+        params: {
+          id: idCambiato
+        },
+        query: {
+          routeLongName: this.$route.query.routeLongName
+        }
+      });
+      this.$router.go();
+    },
 
     addFavoriteLine(id, preferiti) {
       //aggiunge ai preferiti la linea visualizzata solo se è stato eseguito l'accesso
@@ -340,7 +354,7 @@ export default {
 
   watch: {
     selezionato: function() {
-      //controllo il cambiamento della trip selezionata dal select o da precedente e successivo 
+      //controllo il cambiamento della trip selezionata dal select o da precedente e successivo
       this.current = this.selezionato;
       this.orari = this.viaggi[this.current].stopTimes;
       if (this.current == 0) {
@@ -366,4 +380,8 @@ export default {
 .testoDisattivato {
   color: lightgray !important;
 }
+/* img{
+  height: 40px !important;
+  width: 40px !important;
+} */
 </style>
