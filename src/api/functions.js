@@ -2,7 +2,7 @@ import axios from "axios";
 
 export default {
 
-    //RESTITUISCE LA LISTA DELLE LINEE DI UNO SPECIFICO SERVIZIO (ES. Autobus urbani trenti agencyId = 12 )
+    //RESTITUISCE LA LISTA DELLE LINEE DI UNO SPECIFICO SERVIZIO (ES. Autobus urbani trento agencyId = 12 )
     getLinee(agencyId) {
         return axios.get("https://os.smartcommunitylab.it/core.mobility/getroutes/" + agencyId);
     },
@@ -15,13 +15,6 @@ export default {
     //RESTITUISCE LA LISTA DELLE FERMATE DI UNA LINEA CON DATI COME ID, NOME, ACCESSIBILITÀ, LAT E LNG 
     getLineaSingolaAccessibilita(agencyId, routeId) {
         return axios.get("https://os.smartcommunitylab.it/core.mobility/getstops/" + agencyId + "/" + routeId);
-    },
-
-    //RESTITUISCE L'ARRAY CON SOLO LA LISTA DEGLI ORARI (TRIPS) DATA LA LINEA SPECIFICA
-    getArrayOrarioTotaleLineaSingola(agencyId, routeId) {
-        return this.getLineaSingolaConOrario(agencyId, routeId).then(results => {
-            return results.data.trips;
-        });
     },
 
     //API OPENCAGEDATA --> RESTITUISCE DATI GEOGRAFICI COME LAT E LNG PASSANDO UNA STRINGA (VIENE RISTRETTO IL CAMPO A SOLO RISULTATI IN ITALIANO E GEOGRAFICAMENTE IN ITALIA)
