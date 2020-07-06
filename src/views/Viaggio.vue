@@ -67,7 +67,6 @@
     </div>
 
     <md-empty-state
-      md-rounded
       md-icon="error"
       md-label="C'è stato un errore nella ricerca"
       md-description="Clicca su riprova e reinserisci la partenza e la destinazione."
@@ -75,7 +74,6 @@
     ></md-empty-state>
 
     <md-empty-state
-      md-rounded
       md-icon="search_off"
       md-label="La ricerca non ha prodotto risultati"
       md-description="Prova a cambiare partenza e arrivo"
@@ -201,10 +199,11 @@ export default {
           this.risultati = results.data;
           this.ordinaRisultati();
 
-          if (results.data.length == 0) this.zeroRisultati = true;
-          if (results.data.length != 0) {
+          if (results.data.length == 0) {
+            this.zeroRisultati = true;
+            this.showSBErrore = false;
+          } else if (results.data.length != 0) {
             this.zeroRisultati = false;
-
             if (Accesso.isLoggedIn()) {
               dbFunctions.salvaUltimaRicerca(
                 this.indirizzoA,
@@ -217,6 +216,7 @@ export default {
         })
         .catch(() => {
           this.showSBErrore = true;
+          this.zeroRisultati = false;
           this.activeSpinner = false;
         });
     },
