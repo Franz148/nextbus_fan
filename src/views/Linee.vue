@@ -1,69 +1,86 @@
 <template>
-  <div class="md-layout md-gutter md-alignment-center-center">
-    <div class="md-layout-item md-layout md-alignment-center-center md-size-90">
-      <!-- Tabs per differenziare andata e ritorno -->
-      <md-tabs v-model="valoreAR" md-alignment="fixed">
-        <md-tab id="tab-andata" md-label="ANDATA" @click="valoreAR = false"></md-tab>
-        <md-tab id="tab-ritorno" md-label="RITORNO" @click="valoreAR = true"></md-tab>
-      </md-tabs>
+  <div class="md-layout md-alignment-center-center md-size-100">
+    <div
+      v-if="!lineeVuote"
+      class="md-gutter md-layout-item md-layout md-alignment-center-center md-size-100"
+    >
+      <div
+        class="md-layout-item md-layout md-alignment-center-center md-size-60 md-small-size-80 md-xsmall-size-100"
+      >
+        <!-- Tabs per differenziare andata e ritorno -->
+        <md-tabs v-model="valoreAR" md-alignment="fixed">
+          <md-tab id="tab-andata" md-label="ANDATA" @click="valoreAR = false"></md-tab>
+          <md-tab id="tab-ritorno" md-label="RITORNO" @click="valoreAR = true"></md-tab>
+        </md-tabs>
 
-      <!-- Spinner di caricamento  -->
-      <div class="md-layout-item md-size-10">
-        <br />
-        <md-progress-spinner md-mode="indeterminate" v-show="activeSpinner"></md-progress-spinner>
+        <!-- Spinner di caricamento  -->
+        <div class="md-layout-item md-size-10">
+          <br />
+          <md-progress-spinner md-mode="indeterminate" v-show="activeSpinner"></md-progress-spinner>
+        </div>
       </div>
+
+      <!-- Lista delle linee, che selezionando passa a linea singola l'id della linea e il long name -->
+      <md-list class="md-double-line md-layout-item md-size-60 md-small-size-80 md-xsmall-size-90">
+        <div v-for="(linea, i) in linee" :key="linea.id.id" v-bind:class="sceltaAR(linea.id.id)">
+          <md-list-item
+            :to="'/lineaSingola/' + linea.id.id + '?routeLongName='  + linea.routeLongName"
+          >
+            <!-- Avatar che prende dalla cartella assets/iconeLinee chiamate come l'id delle linee a cui appartengono -->
+            <md-avatar>
+              <img :src="getImageFromId(linea.id.id)" />
+            </md-avatar>
+            <div class="md-list-item-text">
+              <span>{{linea.routeLongName}}</span>
+              <span>{{linea.routeShortName}}</span>
+            </div>
+
+            <!-- Icona cuore che toglie la linea ai preferiti, prevent serve per non entrare nella linea singola -->
+            <md-button
+              class="md-icon-button"
+              @click.stop.prevent="addFavoriteLine(linea.id.id, linea.preferiti,i)"
+              v-if="!linea.preferiti"
+            >
+              <md-icon>favorite_border</md-icon>
+            </md-button>
+            <!-- Icona cuore che mette la linea nei preferiti -->
+            <md-button
+              class="md-icon-button md-primary"
+              @click.stop.prevent="addFavoriteLine(linea.id.id, linea.preferiti,i)"
+              v-if="linea.preferiti"
+            >
+              <md-icon>favorite</md-icon>
+            </md-button>
+          </md-list-item>
+          <md-divider></md-divider>
+        </div>
+      </md-list>
+
+      <!-- Snackbar per informare l'utente che la linea è stata aggiunta ai preferiti -->
+      <md-snackbar :md-active.sync="showSBadd" md-persistent>
+        <span>
+          La
+          <b>linea {{testoSnackbar}}</b> è stata aggiunta ai preferiti.
+        </span>
+      </md-snackbar>
+      <!-- Snackbar per informare l'utente che la linea è stata rimossa dai preferiti -->
+      <md-snackbar :md-active.sync="showSBremove" md-persistent>
+        <span>
+          La
+          <b>linea {{testoSnackbar}}</b> è stata rimossa dai preferiti.
+        </span>
+      </md-snackbar>
     </div>
-
-    <!-- Lista delle linee, che selezionando passa a linea singola l'id della linea e il long name -->
-    <md-list class="md-double-line md-layout-item md-size-60 md-small-size-80 md-xsmall-size-90">
-      <div v-for="(linea, i) in linee" :key="linea.id.id" v-bind:class="sceltaAR(linea.id.id)">
-        <md-list-item
-          :to="'/lineaSingola/' + linea.id.id + '?routeLongName='  + linea.routeLongName"
-        >
-          <!-- Avatar che prende dalla cartella assets/iconeLinee chiamate come l'id delle linee a cui appartengono -->
-          <md-avatar>
-            <img :src="getImageFromId(linea.id.id)"/>
-          </md-avatar>
-          <div class="md-list-item-text">
-            <span>{{linea.routeLongName}}</span>
-            <span>{{linea.routeShortName}}</span>
-          </div>
-
-          <!-- Icona cuore che toglie la linea ai preferiti, prevent serve per non entrare nella linea singola -->
-          <md-button
-            class="md-icon-button"
-            @click.stop.prevent="addFavoriteLine(linea.id.id, linea.preferiti,i)"
-            v-if="!linea.preferiti"
-          >
-            <md-icon>favorite_border</md-icon>
-          </md-button>
-          <!-- Icona cuore che mette la linea nei preferiti -->
-          <md-button
-            class="md-icon-button md-primary"
-            @click.stop.prevent="addFavoriteLine(linea.id.id, linea.preferiti,i)"
-            v-if="linea.preferiti"
-          >
-            <md-icon>favorite</md-icon>
-          </md-button>
-        </md-list-item>
-        <md-divider></md-divider>
-      </div>
-    </md-list>
-
-    <!-- Snackbar per informare l'utente che la linea è stata aggiunta ai preferiti -->
-    <md-snackbar :md-active.sync="showSBadd" md-persistent>
-      <span>
-        La
-        <b>linea {{testoSnackbar}}</b> è stata aggiunta ai preferiti.
-      </span>
-    </md-snackbar>
-    <!-- Snackbar per informare l'utente che la linea è stata rimossa dai preferiti -->
-    <md-snackbar :md-active.sync="showSBremove" md-persistent>
-      <span>
-        La
-        <b>linea {{testoSnackbar}}</b> è stata rimossa dai preferiti.
-      </span>
-    </md-snackbar>
+    <!-- 
+    Empty state in caso l'array delle linee fosse vuoto-->
+    <div class="md-layout-item md-layout md-alignment-center-center" v-if="lineeVuote">
+      <md-empty-state
+        md-icon="error_outline"
+        md-label="Nessuna linea trovata"
+        md-description="Prova a ricaricare la pagina"
+        class="md-layout-item md-size-80"
+      ></md-empty-state>
+    </div>
   </div>
 </template>
 
@@ -80,17 +97,28 @@ export default {
     testoSnackbar: "",
     showSBadd: false,
     showSBremove: false,
-    activeSpinner: true
+    activeSpinner: true,
+    lineeVuote: false
   }),
   created: function() {
-    Functions.getLinee(12).then(results => {
-      this.linee = results.data;
-      this.ordinaLinee();
-      this.addFavoriteField(this.linee);
-      //si può aggiungere una linea nei preferiti solo se è stato fatto l'accesso
-      if (Accesso.isLoggedIn()) this.setFavorite(this.linee);
-      this.activeSpinner = false;
-    });
+    Functions.getLinee(12)
+      .then(results => {
+        this.linee = results.data;
+        //mostra empty state se fosse vuoto l'array
+        if (this.linee.length == 0) {
+          this.lineeVuote = true;
+        }
+        this.ordinaLinee();
+        this.addFavoriteField(this.linee);
+        //si può aggiungere una linea nei preferiti solo se è stato fatto l'accesso
+        if (Accesso.isLoggedIn()) this.setFavorite(this.linee);
+        this.activeSpinner = false;
+      })
+      .catch(error => {
+        console.error(error);
+        // linee non disponibili
+        this.lineeVuote = true;
+      });
   },
 
   methods: {
