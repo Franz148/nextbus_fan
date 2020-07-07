@@ -27,7 +27,7 @@
                 <span
                   class="md-error"
                   v-else-if="!$v.form.indirizzoP.minlength"
-                >Devi inserire almeno 5 caratteri</span>
+                >Devi inserire almeno 3 caratteri</span>
               </md-field>
             </div>
 
@@ -54,7 +54,7 @@
                 <span
                   class="md-error"
                   v-else-if="!$v.form.indirizzoA.minlength"
-                >Devi inserire almeno 5 caratteri</span>
+                >Devi inserire almeno 3 caratteri</span>
               </md-field>
             </div>
 
@@ -236,6 +236,7 @@ export default {
       };
 
       this.sending = true;
+      this.activeUltimeRicerche = false;
 
       this.$router.push({
         path: "/pianifica/viaggio",
@@ -304,6 +305,7 @@ export default {
         };
 
         this.sending = true;
+        this.activeUltimeRicerche = false;
 
         this.$router.push({
           path: "/pianifica/viaggio",
@@ -333,6 +335,7 @@ export default {
       this.sending = true;
       this.activeUltimeRicerche = false;
       
+      //Verifica che la query del path sia vuota
       if (_.isEmpty(from.query)) {
         this.sending = false;
         this.activeUltimeRicerche = true;
