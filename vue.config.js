@@ -1,3 +1,3 @@
 module.exports = {
-    publicPath: '/nextbus_fan/pianifica/'
+    publicPath: '/nextbus_fan/'
 }
