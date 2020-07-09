@@ -1,5 +1,10 @@
 <template>
+<!-- Pagina statica -->
   <div class="md-layout md-gutter md-alignment-center-center">
+
+    <!-- Tabella delle varie tariffe dei biglietti che dipende dalla variabile ticketRates -->
+    <!-- Per la visualizzazione da smartphone l'utente deve fare swipe per visualizzarla,
+     altrimenti sarebbe troppo piccola -->
     <md-table
       v-model="ticketsRates"
       class="md-layout-item md-size-60 md-small-size-80 md-xsmall-size-90"
@@ -26,7 +31,8 @@
 export default {
   name: "TableTemplate",
   data: () => ({
-    ticketsRates: [
+  // contenuto della tabella
+  ticketsRates: [
       {
         tipologiaTitolo: "Biglietto urbano valido 70 minuti",
         singolo: "  € 1.20",
