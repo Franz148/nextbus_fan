@@ -330,7 +330,7 @@ export default {
   },
 
   watch: {
-    //*********TENGO D'OCCHIO LE OPERAZIONI SUL ROUTER IN MODO TALE DA MOSTRARE E NASCONDERE I RISULTATI DELLA RICERCA O LE ULTIME RICERCHE
+    //TENGO D'OCCHIO LE OPERAZIONI SUL ROUTER IN MODO TALE DA MOSTRARE E NASCONDERE I RISULTATI DELLA RICERCA O LE ULTIME RICERCHE
     $route(from) {
       this.sending = true;
       this.activeUltimeRicerche = false;
@@ -341,16 +341,6 @@ export default {
         this.activeUltimeRicerche = true;
         this.caricaUltimeRicerche();
       }
-    },
-
-    sending: function() {
-      if (this.sending) this.activeUltimeRicerche = false;
-      else this.activeUltimeRicerche = true;
-    },
-
-    activeUltimeRicerche: function() {
-      if (this.activeUltimeRicerche) this.sending = false;
-      else this.sending = true;
     }
   }
 };

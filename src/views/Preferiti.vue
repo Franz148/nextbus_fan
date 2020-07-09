@@ -6,7 +6,7 @@
         md-icon="account_circle"
         md-label="Visualizza i tuoi preferiti"
         md-description="Per poter salvare fermate e linee preferite devi effettuare l'accesso"
-        v-if="!checkAutenticazione()" 
+        v-if="!checkAutenticazione()"
       >
         <md-button class="md-primary md-raised" to="/accesso">Accedi</md-button>
       </md-empty-state>
@@ -63,6 +63,14 @@
             >
               <md-button class="md-primary md-raised" to="/linee">Pagina linee</md-button>
             </md-empty-state>
+
+            <!-- EMPTY STATE MOSTRATO NEL CASO IN CUI CI SIANO ERRORI NELL'API -->
+            <md-empty-state
+              md-icon="error"
+              md-label="C'è stato un errore nel caricamento dei preferiti"
+              md-description="Prova a ricaricare la pagina."
+              v-if="showErrore"
+            ></md-empty-state>
           </div>
         </md-card-content>
       </md-card>
@@ -98,10 +106,11 @@ export default {
     activeSpinner: true,
     shownedEmptyState: false,
     showSBremove: false,
-    testoSnackbar: ""
+    testoSnackbar: "",
+    showErrore: false
   }),
   methods: {
-    //RITORNA TRUE SE L'UTENTE HA FATTO L'ACCESSO 
+    //RITORNA TRUE SE L'UTENTE HA FATTO L'ACCESSO
     checkAutenticazione() {
       return Accesso.isLoggedIn();
     },
@@ -136,16 +145,28 @@ export default {
       const getLinee = Functions.getLinee(12);
       const getPreferiti = Dbfunctions.getLineePreferite();
 
-      axios.all([getLinee, getPreferiti]).then(
-        axios.spread((...responses) => {
-          this.datiLinee = responses[0].data;
-          this.lineePreferite = responses[1];
+      axios
+        .all([getLinee, getPreferiti])
+        .then(
+          axios.spread((...responses) => {
+            this.datiLinee = responses[0].data;
+            this.lineePreferite = responses[1];
+
+            this.activeSpinner = false;
+
+            if (this.datiLinee.length == 0) {
+              this.activeSpinner = false;
+              this.showErrore = true;
+            }
+            if (this.lineePreferite.length == 0) this.shownedEmptyState = true;
+          })
+        )
+        .catch(errors => {
+          console.error(errors);
 
           this.activeSpinner = false;
-
-          if (this.lineePreferite.length == 0) this.shownedEmptyState = true;
-        })
-      );
+          this.showErrore = true;
+        });
     }
   }
 };

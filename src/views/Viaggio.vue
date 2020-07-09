@@ -239,6 +239,7 @@ export default {
         .catch(() => {
           this.showSBErrore = true;
           this.zeroRisultati = false;
+
           this.activeSpinner = false;
         });
     },
@@ -260,6 +261,7 @@ export default {
     $route(from, to) {
       if (_.isEqual(from.query, to.query) == false) {
         this.activeSpinner = true;
+        
         this.loadViaggio();
       }
     }
