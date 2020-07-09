@@ -1,6 +1,5 @@
 import firebase from "@firebase/app";
 import "@firebase/firestore";
-
 import Accesso from "../login/access-functions.js";
 
 //CONFIGURAZIONE DATABASE
