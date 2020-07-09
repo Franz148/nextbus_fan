@@ -2,13 +2,17 @@
   <div class="md-layout-item md-size-100">
     <div class="md-layout md-alignment-center-center">
       <div class="md-layout-item md-size-100 md-title">Risultati della ricerca</div>
+
+      <!-- SPINNER DI CARICAMENTO -->
       <div class="md-layout-item md-size-10">
         <md-progress-spinner class="md-layout-item" md-mode="indeterminate" v-show="activeSpinner"></md-progress-spinner>
       </div>
 
+      <!-- ELENCO DEI RISULTATI COME LISTA ESPANDIBILE (OGNI ELEMENTO CONTIENE I PASSAGGI DEI VARI RISULTATI)  -->
       <md-list md-expand-single="true" class="md-layout-item md-size-100 md-triple-line">
         <div v-for="(viaggio, i) in risultati" :key="i">
           <md-list-item md-expand>
+            <!-- ICONA PER VEDERE SE IL PERCORSO FA USO DI MEZZI PUBBLICI O NO -->
             <md-icon v-if="viaggio.walkingDuration == (viaggio.duration / 1000)">directions_walk</md-icon>
             <md-icon v-if="viaggio.walkingDuration != (viaggio.duration / 1000)">directions_bus</md-icon>
             <div class="md-list-item-text">
@@ -28,12 +32,14 @@
               </span>
             </div>
 
+            <!-- PARTE ESPANDIBILE CON OGNI PASSAGGIO DEI SINGOLI RISULTATI -->
             <md-list slot="md-expand" class="md-triple-line">
               <md-list-item
                 class="md-inset"
                 v-for="(item, index) in viaggio.leg"
                 :key="item.endtime"
               >
+                <!-- SCELTA AVATAR CON IMPORTANZA ALLE LINEE URBANE DI TRENTO (MOSTRANDO L'IMMAGINE) -->
                 <md-avatar class="md-avatar-icon" v-if="item.transport.type == 'WALK'">
                   <md-icon>directions_walk</md-icon>
                 </md-avatar>
@@ -49,6 +55,8 @@
                 <md-avatar class="md-avatar-icon" v-if="item.transport.type == 'TRAIN'">
                   <md-icon>train</md-icon>
                 </md-avatar>
+
+                <!-- SCELTA TESTO IN BASE AL TIPO DI PERCORSO DA FARE (A PIEDI, BUS O TRENO) -->
                 <div class="md-list-item-text">
                   <span
                     v-if="item.transport.type == 'BUS' && item.transport.agencyId != 12"
@@ -66,6 +74,7 @@
       </md-list>
     </div>
 
+    <!-- EMPTY STATE SE CI SONO ERRORI NELL'API -->
     <md-empty-state
       md-icon="error"
       md-label="C'è stato un errore nella ricerca"
@@ -73,6 +82,7 @@
       v-if="showSBErrore"
     ></md-empty-state>
 
+    <!-- EMPTY STATE SE CI SONO 0 RISULTATI -->
     <md-empty-state
       md-icon="search_off"
       md-label="La ricerca non ha prodotto risultati"
@@ -80,6 +90,7 @@
       v-if="zeroRisultati"
     ></md-empty-state>
 
+    <!-- SNACKBAR CHE AIUTA A TORNARE IN PIANIFICA SE CI SONO ERRORI NELL'API -->
     <md-snackbar :md-active.sync="showSBErrore" :md-duration="duration">
       <span>La ricerca non è andata a buon fine!</span>
       <md-button class="md-primary" @click="ricercaFallita()">Riprova</md-button>
@@ -88,10 +99,19 @@
 </template>
 
 <script>
+//LIBRERIA PER CONVERSIONE DATA E ORA
 import format from "date-fns/format";
+
+//LIBRERIA PER L'ACCESSO
 import Accesso from "../login/access-functions.js";
+
+//GESTIONE API
 import Functions from "../api/functions.js";
+
+//GESTIONI DB
 import dbFunctions from "../database/db-functions";
+
+//UTILIZZO DELLA LIBRERIA LODASH TRAMITE "_"
 var _ = require("lodash");
 
 export default {
@@ -108,24 +128,23 @@ export default {
   }),
 
   methods: {
+    //RESTITUISCE L'IMMAGINE DELLA LINEA AVENDO L'ID
     getImageFromId(id) {
       return require("../assets/iconeLinee/" + id + ".png");
     },
+
+    //CONVERTE IL TIMESTAMP IN FORMATO hh:mm
     convertTimestampToTime(unix_timestamp) {
-      // Create a new JavaScript Date object based on the timestamp
-      // multiplied by 1000 so that the argument is in milliseconds, not seconds.
       var date = new Date(unix_timestamp);
-      // Hours part from the timestamp
+
       var hours = date.getHours();
-      // Minutes part from the timestamp
       var minutes = "0" + date.getMinutes();
 
-      // Will display time in 10:30:23 format
       return hours + ":" + minutes.substr(-2);
     },
 
+    //RESTITUISCE UN'ORA IN FORMATO hh:mm:ss DATO COME INPUT L'ORA IN MILLISECONDI
     msToHMS(s) {
-      // Pad to 2 or 3 digits, default is 2
       function pad(n, z) {
         z = z || 2;
         return ("00" + n).slice(-z);
@@ -141,21 +160,21 @@ export default {
       return pad(hrs) + ":" + pad(mins) + ":" + pad(secs);
     },
 
+    //CONVERTE IL TEMPO IN FORMATO hh:mm 24H IN hh:mm AM/PM 12H
     tConvert(time) {
-      // Check correct time format and split into components
       time = time
         .toString()
         .match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
 
       if (time.length > 1) {
-        // If time format correct
-        time = time.slice(1); // Remove full string match value
-        time[5] = +time[0] < 12 ? "AM" : "PM"; // Set AM/PM
-        time[0] = +time[0] % 12 || 12; // Adjust hours
+        time = time.slice(1);
+        time[5] = +time[0] < 12 ? "AM" : "PM";
+        time[0] = +time[0] % 12 || 12;
       }
-      return time.join(""); // return adjusted time or original string
+      return time.join("");
     },
 
+    //ORDINA I RISULTATI DELLA RICERCA IN BASE A QUALE PERCORSO MI FA ARRIVARE PRIMA IN TERMINI DI TEMPO E NON DI DURATA EFFETTIVA DEL PERCORSO
     ordinaRisultati() {
       let confronta = (a, b) => {
         const ricercaA = a.endtime;
@@ -175,6 +194,7 @@ export default {
       this.risultati.sort(confronta);
     },
 
+    //FUNZIONE CHE RACCHIUDE TUTTI GLI STEP NECESSARI A PRENDERE I DATI DALLA QUERY DEL PATH ED ESEGUIRE LA CHIAMATA ALL'API IN MODO TALE DA MOSTRARE I RISUTALTI
     loadViaggio() {
       this.indirizzoP = this.$route.query.indirizzoP;
       this.indirizzoA = this.$route.query.indirizzoA;
@@ -204,6 +224,8 @@ export default {
             this.showSBErrore = false;
           } else if (results.data.length != 0) {
             this.zeroRisultati = false;
+
+            //Se ho effettuato il login e la ricerca è andata a buon fine, faccio anche in modo che venga salvata nel DB
             if (Accesso.isLoggedIn()) {
               dbFunctions.salvaUltimaRicerca(
                 this.indirizzoA,
@@ -220,6 +242,8 @@ export default {
           this.activeSpinner = false;
         });
     },
+
+    //SE CI SONO ERRORI NELLA RISPOSTA DELL'API ALLORA RESETTO LA QUERY DEL PATH E TORNO A PIANIFICA GRAZIE ALLO SNACKBAR
     ricercaFallita() {
       this.showSBErrore = false;
 
@@ -231,6 +255,7 @@ export default {
     this.loadViaggio();
   },
 
+  //CONTROLLO NECESSARIO PER FARE RICERCHE UNA VOLTA CHE SI STANNO VISUALIZZANDO I RISULTATI SENZA CHE VENGA RICARICATA LA PAGINA
   watch: {
     $route(from, to) {
       if (_.isEqual(from.query, to.query) == false) {

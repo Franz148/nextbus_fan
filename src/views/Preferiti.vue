@@ -1,15 +1,17 @@
 <template>
   <div>
     <div class="md-layout md-alignment-center-center">
+      <!-- EMPTY STATE NEL CASO IN CUI NON SI SIA FATTO L'ACCESSO -->
       <md-empty-state
         md-icon="account_circle"
         md-label="Visualizza i tuoi preferiti"
         md-description="Per poter salvare fermate e linee preferite devi effettuare l'accesso"
-        v-if="!checkAutenticazione()"
+        v-if="!checkAutenticazione()" 
       >
         <md-button class="md-primary md-raised" to="/accesso">Accedi</md-button>
       </md-empty-state>
 
+      <!-- CARD VISUALIZZATA NEL CASO SI SIA FATTO L'ACCESSO -->
       <md-card
         class="md-layout-item md-size-60 md-small-size-80 md-xsmall-size-90"
         v-if="checkAutenticazione()"
@@ -23,10 +25,12 @@
 
         <md-card-content class="content">
           <div class="md-layout md-alignment-center-center">
+            <!-- SPINNER PER IL CARICAMENTO -->
             <div class="md-layout-item md-size-5">
               <md-progress-spinner md-mode="indeterminate" v-show="activeSpinner"></md-progress-spinner>
             </div>
 
+            <!-- LISTA DEI PREFERITI  -->
             <md-list v-if="!shownedEmptyState" class="md-layout-item md-size-100">
               <div v-for="(linea, i) in lineePreferite" :key="linea.idLinea">
                 <md-list-item
@@ -50,6 +54,7 @@
               </div>
             </md-list>
 
+            <!-- EMPTY STATE NEL CASO IN CUI NON CI SIANO PREFERITI -->
             <md-empty-state
               md-icon="favorite_border"
               md-label="Non hai ancora preferiti"
@@ -63,6 +68,7 @@
       </md-card>
     </div>
 
+    <!-- SNACKBAR IN CASO DI RIMOZIONE DEI PREFERITI DI UNA LINEA -->
     <md-snackbar :md-active.sync="showSBremove" md-persistent>
       <span>
         La
@@ -73,9 +79,16 @@
 </template>
 
 <script>
+//LIBRERIA GESTIONE ACCESSO
 import Accesso from "../login/access-functions.js";
+
+//GESTIONE DATABASE
 import Dbfunctions from "../database/db-functions.js";
+
+//GESTIONE API
 import Functions from "../api/functions.js";
+
+//AXIOS PER FARE CHIAMATA AXIOS.ALL IN QUESTA PAGINA
 import axios from "axios/";
 
 export default {
@@ -88,18 +101,22 @@ export default {
     testoSnackbar: ""
   }),
   methods: {
+    //RITORNA TRUE SE L'UTENTE HA FATTO L'ACCESSO 
     checkAutenticazione() {
       return Accesso.isLoggedIn();
     },
 
+    //RESTITUISCE L'IMMAGINE IN BASE ALL'ID DELLA LINEA
     getImageFromId(id) {
       return require("../assets/iconeLinee/" + id + ".png");
     },
 
+    //IN BASE ALL'ID RESTITUSISCE UN ELEMENTO DELL'ARRAY LINEE OTTENUTO DALLA CHIAMATA ALL'API
     returnLineaSingola(id) {
       return this.datiLinee.find(linea => linea.id.id == id);
     },
 
+    //PERMETTE DI RIMUOVERE DAI PREFERITI UNA LINEA SPECIFICA (VARIANTE DEL METODO USATO IN LINEE.VUE E LINEASINGOLA.VUE)
     addFavoriteLine(id, preferiti, i) {
       if (preferiti == 1) {
         Dbfunctions.rimuoviLineaPreferita(id).then(() => {
@@ -114,6 +131,7 @@ export default {
   },
 
   created: function() {
+    //SE L'UTENTE HA FATTO L'ACCESSO, VIENE ESEGUITO UN AXIOS.ALL SULLE CHIAMATE ALLE LINEE TOTALI E ALLE LINEE PREFERITE NEL DB
     if (Accesso.isLoggedIn()) {
       const getLinee = Functions.getLinee(12);
       const getPreferiti = Dbfunctions.getLineePreferite();
