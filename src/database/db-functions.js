@@ -27,7 +27,6 @@ export default {
         var arrayLinee = [];
 
         return elementiPreferiti
-            .where("idFermata", "==", "-1")
             .where("username", "==", user)
             .get()
             .then(results => {
@@ -44,7 +43,6 @@ export default {
         var user = Accesso.getUsername().toLowerCase();
         return elementiPreferiti
             .add({
-                idFermata: "-1",
                 idLinea: idLinea,
                 username: user
             });
