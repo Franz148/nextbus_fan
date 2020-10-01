@@ -1,6 +1,0 @@
-//MODIFICA TEMA DI DEFAULT CON I COLORI DI NEXTBUS
-@import "~vue-material/dist/theme/engine";
-@include md-register-theme("default", ( primary: #4caf50, // Primary color
-accent: #80e27e //Secondary color
-));
-@import "~vue-material/dist/theme/all";
