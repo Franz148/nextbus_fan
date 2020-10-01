@@ -14,8 +14,7 @@
 
             <md-menu-content>
               <md-menu-item @click="cambioAR($route.params.id)">
-                <md-icon>compare_arrows
-                </md-icon>
+                <md-icon>compare_arrows</md-icon>
                 <span>Cambia direzione</span>
               </md-menu-item>
             </md-menu-content>
@@ -174,8 +173,7 @@ export default {
     showSBremove: false,
     testoSnackbar: "",
     caricamento: true,
-    disabilitaCambioAR:false
-    
+    disabilitaCambioAR: false
   }),
 
   created: function() {
@@ -189,11 +187,11 @@ export default {
         break;
       case "02":
         this.idRoutes = "02C";
-        this.disabilitaCambioAR=true;
+        this.disabilitaCambioAR = true;
         break;
       case "_A":
         this.idRoutes = "%20AC"; //NON VA
-        this.disabilitaCambioAR=true;
+        this.disabilitaCambioAR = true;
         break;
       case "FUTSR":
         this.idRoutes = "FunR";
@@ -209,7 +207,7 @@ export default {
         break;
       case "NPA":
         this.idRoutes = "NPC";
-        this.disabilitaCambioAR=true;
+        this.disabilitaCambioAR = true;
         break;
 
       default:
@@ -249,7 +247,6 @@ export default {
     Functions.getLineaSingolaAccessibilita(this.idAgency, this.idRoutes)
       .then(results2 => {
         this.accessibilita = results2.data;
-        
       })
       .catch(error => {
         console.error(error);
@@ -258,6 +255,9 @@ export default {
   methods: {
     //ricambio l'id per le immagini degli avatar e le prendo dal DB
     getImageFromId(id) {
+      if (id == "Ca") id = "CA";
+      else if (id == "Cr") id = "CR";
+
       return require("../assets/iconeLinee/" + id + ".png");
     },
 
@@ -310,15 +310,15 @@ export default {
     cambioAR(id) {
       var idCambiato;
 
-      if(id.indexOf("A") != -1){
+      if (id == "Ca") idCambiato = "Cr";
+      else if (id == "Cr") idCambiato = "Ca";
+
+      if (id.indexOf("A") != -1) {
         idCambiato = id.replace("A", "R");
-
-      }
-      else
-      {
+      } else if (id.indexOf("R") != -1) {
         idCambiato = id.replace("R", "A");
-
       }
+
       this.$router.replace({
         params: {
           id: idCambiato
@@ -379,5 +379,4 @@ export default {
 .testoDisattivato {
   color: lightgray !important;
 }
-
 </style>
