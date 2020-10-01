@@ -123,6 +123,12 @@ export default {
 
   methods: {
     getImageFromId(id) {
+      
+      if(id == "Ca")
+        id = "CA";
+      else if(id == "Cr")
+        id = "CR";
+
       return require("../assets/iconeLinee/" + id + ".png");
     },
     addFavoriteField(linee) {
@@ -168,12 +174,12 @@ export default {
     sceltaAR(id) {
       let classi = [];
       if (this.valoreAR) {
-        if (id.indexOf("A") != -1 || id == "02") {
+        if (id.indexOf("A") != -1 || id == "02" || id == "Ca") {
           //nasconde le linee che nell'id contengono "A"
           classi.push("md-hide");
         }
       } else {
-        if (id.indexOf("R") != -1) {
+        if (id.indexOf("R") != -1 || id == "Cr") {
           //nasconde le linee che nell'id contengono "R"
           classi.push("md-hide");
         }

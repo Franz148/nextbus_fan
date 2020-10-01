@@ -130,6 +130,9 @@ export default {
   methods: {
     //RESTITUISCE L'IMMAGINE DELLA LINEA AVENDO L'ID
     getImageFromId(id) {
+      if (id == "Ca") id = "CA";
+      else if (id == "Cr") id = "CR";
+
       return require("../assets/iconeLinee/" + id + ".png");
     },
 
@@ -261,7 +264,7 @@ export default {
     $route(from, to) {
       if (_.isEqual(from.query, to.query) == false) {
         this.activeSpinner = true;
-        
+
         this.loadViaggio();
       }
     }

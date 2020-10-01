@@ -117,6 +117,9 @@ export default {
 
     //RESTITUISCE L'IMMAGINE IN BASE ALL'ID DELLA LINEA
     getImageFromId(id) {
+      if (id == "Ca") id = "CA";
+      else if (id == "Cr") id = "CR";
+
       return require("../assets/iconeLinee/" + id + ".png");
     },
 
